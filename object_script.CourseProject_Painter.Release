@@ -1,0 +1,14 @@
+release/canvasrangeoperator.o
+release/graphlayer.o
+release/graphlayerdisplayer.o
+release/imagestorage.o
+release/main.o
+release/painter.o
+release/painterbucket.o
+release/painterlabel.o
+release/moc_graphlayer.o
+release/moc_graphlayerdisplayer.o
+release/moc_imagestorage.o
+release/moc_painter.o
+release/moc_painterbucket.o
+release/moc_painterlabel.o
