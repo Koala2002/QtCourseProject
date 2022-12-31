@@ -1,4 +1,4 @@
-#include "painterbucket.h"
+#include "bucketpainter.h"
 
 BucketPainter::BucketPainter(QImage *image,QColor c,QObject *parent)
     : QObject{parent}
@@ -50,5 +50,12 @@ bool BucketPainter::CanFlow(QPoint p)
     else if(Colored[p.y()][p.x()]==true)return false;
     else if(img->pixelColor(p)==bucketColor)return false;
     else if(img->pixelColor(p)!=coverColor)return false;
+    else return true;
+}
+
+bool BucketPainter::CanFlow(QPoint p, QSize range)
+{
+    if(p.x()>=range.width()||p.y()>=range.height())return false;
+    else if(p.x()<0||p.y()<0)return false;
     else return true;
 }

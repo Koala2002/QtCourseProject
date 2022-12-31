@@ -36,13 +36,17 @@ void ImageStorage::push(QImage img)
     storageSize++;//儲存槽內容物加1
 }
 
-QImage ImageStorage::front()
+QImage ImageStorage::front() const
 {
     return frontImage->img;
 }
+ImageNode* ImageStorage::back() const
+{
+    return backImage;
+}
 
 void ImageStorage::pop_front(){
-    if(storageSize==1)return;
+    if(storageSize==0)return;
     ImageNode *temp=frontImage;
     frontImage=frontImage->next;
 
@@ -70,10 +74,11 @@ void ImageStorage::returnBTBSImage()
 }
 
 //取得畫布儲存槽現存畫布數量
-int ImageStorage::size()
+int ImageStorage::size() const
 {
     return storageSize;
 }
+
 
 //畫布總數超出容量，捨去過去的畫布
 void ImageStorage::pop_back()

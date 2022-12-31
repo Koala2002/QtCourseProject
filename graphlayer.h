@@ -4,8 +4,10 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <vector>
+#include <queue>
 #include <QLabel>
 #include <imagestorage.h>
+#include <QGraphicsScene>
 
 class GraphLayerObject;
 class CanvasRangeOperator;
@@ -23,17 +25,27 @@ public:
     int total();//取得圖層總數
     void setLayer(GraphLayerObject * layer);//更改圖層
     void layerCountChange(int num);//改變圖層總數
-    GraphLayerObject *Top();
-    QSize CanvasSize();
-    void CanvasUpdate(GraphLayerObject *objdata);
-    QWidget* Widget();
+
+    GraphLayerObject *Top();//返回目前圖層物件
+    QSize CanvasSize();//返回視窗大小
+    void CanvasUpdate(GraphLayerObject *objdata);//視窗大小更新
+
+    QWidget* Widget();//不知道這啥
+
+    int &layerDepth();//圖層深度
+
+    QGraphicsScene* GraphLayerScene();//回傳畫布空間
 
 private:
 
     GraphLayerObject *layerNow;
     QWidget *widget;
-    CanvasRangeOperator *CanvasOperator;
+
+    QGraphicsScene *PainterDrawRegion;//畫布空間
+    CanvasRangeOperator *CanvasOperator;//畫面大小計算
     int layerCount;//圖層總數
+    int GraphLayerDisplayDepth;//圖層物件顯示深度
+
 signals:
 
 };
@@ -41,10 +53,11 @@ signals:
 class GraphLayerObject:public QLabel{
     friend class GraphLayer;
     friend class CanvasRangeOperator;
+
     Q_OBJECT
 public:
     enum UpdateAction{BackStep,Cancel};
-    GraphLayerObject(QWidget *CanvasControlWidget=new QWidget(),GraphLayer *parent=new GraphLayer(),QImage img=QImage(800,600,QImage::Format_ARGB32));
+    GraphLayerObject(GraphLayer *parent=new GraphLayer(),QImage img=QImage(800,700,QImage::Format_ARGB32));
     ~GraphLayerObject();//刪除圖層
 
     void setImage(QImage img);//設定圖片
@@ -54,14 +67,13 @@ public:
     void hide();//隱藏
     void cancelHide();//取消隱藏
 
+    void operator=(const GraphLayerObject& obj);
+
     GraphLayer* getParent();
-protected:
-    //void mousePressEvent(QMouseEvent *event);
-    //void mouseReleaseEvent(QMouseEvent *event);
-    //void mouseMoveEvent(QMouseEvent *event,QPoint prePoint,QPoint nowPoint);
+
 private:
     GraphLayer *graphlayer;
-    ImageStorage storage;
+    ImageStorage storage;//畫布儲存器
 };
 
 

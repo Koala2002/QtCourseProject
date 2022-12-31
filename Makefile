@@ -254,7 +254,8 @@ Makefile: CourseProject_Painter.pro ../../5.15.2/mingw81_64/mkspecs/win32-g++/qm
 		../../5.15.2/mingw81_64/lib/Qt5Gui.prl \
 		../../5.15.2/mingw81_64/lib/Qt5Core.prl \
 		../../5.15.2/mingw81_64/lib/qtmain.prl \
-		../../5.15.2/mingw81_64/mkspecs/features/build_pass.prf
+		../../5.15.2/mingw81_64/mkspecs/features/build_pass.prf \
+		PainterIcon.qrc
 	$(QMAKE) -o Makefile CourseProject_Painter.pro -spec win32-g++ "CONFIG+=qtquickcompiler"
 ../../5.15.2/mingw81_64/mkspecs/features/spec_pre.prf:
 ../../5.15.2/mingw81_64/mkspecs/qdevice.pri:
@@ -441,6 +442,7 @@ CourseProject_Painter.pro:
 ../../5.15.2/mingw81_64/lib/Qt5Core.prl:
 ../../5.15.2/mingw81_64/lib/qtmain.prl:
 ../../5.15.2/mingw81_64/mkspecs/features/build_pass.prf:
+PainterIcon.qrc:
 qmake: FORCE
 	@$(QMAKE) -o Makefile CourseProject_Painter.pro -spec win32-g++ "CONFIG+=qtquickcompiler"
 

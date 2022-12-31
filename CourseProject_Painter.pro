@@ -9,23 +9,27 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    blurrypainter.cpp \
+    bucketpainter.cpp \
     canvasrangeoperator.cpp \
     graphlayer.cpp \
     graphlayerdisplayer.cpp \
     imagestorage.cpp \
     main.cpp \
     painter.cpp \
-    painterbucket.cpp \
-    painterlabel.cpp
+    painterlabel.cpp \
+    shapepainter.cpp
 
 HEADERS += \
+    blurrypainter.h \
+    bucketpainter.h \
     canvasrangeoperator.h \
     graphlayer.h \
     graphlayerdisplayer.h \
     imagestorage.h \
     painter.h \
-    painterbucket.h \
-    painterlabel.h
+    painterlabel.h \
+    shapepainter.h
 
 FORMS += \
     painter.ui
@@ -34,3 +38,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    PainterIcon.qrc

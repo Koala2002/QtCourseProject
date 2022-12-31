@@ -36,7 +36,7 @@ private:
     GraphLayerDisplayerItem *layerNow;//現在選擇圖層顯示物件
 
     QWidget *widget;
-    QHBoxLayout *Canvas;
+    QVBoxLayout *Canvas;
 
     int layerCount;//圖層總數
 };
@@ -46,10 +46,16 @@ class GraphLayerDisplayerItem : public QLabel
     friend class GraphLayerDisplayer;
     Q_OBJECT
 public:
-    GraphLayerDisplayerItem(GraphLayerDisplayer *parent=new GraphLayerDisplayer(),GraphLayerObject *layer=new GraphLayerObject(),int layerNumber=0);
+    GraphLayerDisplayerItem(
+        GraphLayerDisplayer *parent=new GraphLayerDisplayer(),
+        GraphLayerObject *layer=new GraphLayerObject(),
+        QGraphicsProxyWidget *SceneIdx=NULL,
+        int layerNumber=0
+    );
     ~GraphLayerDisplayerItem();
 
-    GraphLayerObject* getidx();
+    GraphLayerObject* getIdx();
+    QGraphicsProxyWidget* getWidgetIdx();
     GraphLayerDisplayer *getParent();
     QVBoxLayout *ObjectLayout();
 
@@ -57,7 +63,12 @@ public:
     bool isSelect();//是否處於選取狀態
     void setSelectState(bool state);//設定選取狀態
 
+    void deleteLayer();//刪除圖層
+    void hideLayer();//隱藏圖層
+    void copyLayer();//複製圖層
+
 private:
+    QGraphicsProxyWidget *widgetIdx;//圖層物件在畫版上的位置
     GraphLayerObject *idx;//圖層物件位置
     GraphLayerDisplayer *displayer;//圖層清單顯示器
     QVBoxLayout *objectVLayout;//物件排版整合
@@ -66,7 +77,7 @@ private:
     QAction *deleteAction;//刪除功能
     QAction *hideLayerAction;//隱藏功能
 
-    QToolButton *toolButton;//選項按鈕
+    //QToolButton *toolButton;//選項按鈕
     QMenu *toolMenu;//選項清單
 
     void setToolButton();//選項內容設定        
@@ -80,9 +91,5 @@ protected:
 signals:
     void clicked();
 
-public slots:
-    void deleteLayer();//刪除圖層
-private slots:
-    void hideLayer();//隱藏圖層
 };
 #endif // GRAPHLAYERDISPLAYER_H

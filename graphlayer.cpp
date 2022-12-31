@@ -2,14 +2,18 @@
 #include <QDebug>
 #include <QPushButton>
 #include <canvasrangeoperator.h>
+#include "graphlayerdisplayer.h"
+#include <QGraphicsProxyWidget>
+
 //----GraphLayer----//
 GraphLayer::GraphLayer(QWidget *parent)
-    : QWidget{parent}
 {
     widget=parent;
-    //Rangeof
+    GraphLayerDisplayDepth=0;
+    layerCount=0;
     layerNow=NULL;
     CanvasOperator=new CanvasRangeOperator();
+    PainterDrawRegion=new QGraphicsScene;
 }
 
 //新增圖層
@@ -34,9 +38,7 @@ void GraphLayer::CanvasUpdate(GraphLayerObject *objdata)
 //設定現在圖層
 void GraphLayer::setLayer(GraphLayerObject *layer){
 
-    layerNow=layer;
-    if(layerNow!=NULL)layerNow->raise();
-
+    layerNow=layer;   
 }
 
 void GraphLayer::layerCountChange(int num)
@@ -54,37 +56,48 @@ QWidget *GraphLayer::Widget()
     return widget;
 }
 
-GraphLayerObject::GraphLayerObject(QWidget* CanvasControlWidget,GraphLayer *parent,QImage img)
+int &GraphLayer::layerDepth()
 {
-    this->setParent(CanvasControlWidget);
-    graphlayer=parent;
+    return GraphLayerDisplayDepth;
+}
 
+QGraphicsScene *GraphLayer::GraphLayerScene()
+{
+    return PainterDrawRegion;
+}
+
+GraphLayerObject::GraphLayerObject(GraphLayer *parent,QImage img)
+{
+
+    graphlayer=parent;
     setImage(img);
+
     update(img);
 
     this->setStyleSheet("background-color:rgba(0,0,0,0);border:1px solid rgba(255,255,255,100);");
-    this->show();
 }
 //----GraphLayer----//
-
-
 
 //----GraphLayerObject----//
 GraphLayerObject::~GraphLayerObject()
 {
     getParent()->CanvasOperator->deleteRange(this);
-    this->parentWidget()->setMinimumSize(getParent()->CanvasOperator->MaxRange()+QSize(25,25));
     getParent()->layerCount--;
+    getParent()->GraphLayerScene()->setSceneRect(QRect(0,0,getParent()->CanvasSize().width(),getParent()->CanvasSize().height()));//視窗自動調整大小
+
     if(getParent()->layerNow!=this)return;
-    QList<GraphLayerObject*> GraphLayerObjectList=this->parent()->findChildren<GraphLayerObject*>();
+    QList<GraphLayerDisplayerItem*> GraphLayerObjectList=this->getParent()->Widget()->findChildren<GraphLayerDisplayerItem*>();
 
     for(auto &child:GraphLayerObjectList){
-        if(child!=this){       
-            getParent()->setLayer(child);
+        if(child->getIdx()!=this){
+            getParent()->setLayer(child->getIdx());
+
+            child->getWidgetIdx()->setZValue(this->getParent()->layerDepth()++);
             return;
         }
     }
     getParent()->setLayer(NULL);
+
 }
 
 //設定圖片
@@ -103,8 +116,9 @@ void GraphLayerObject::update(QImage img)
 void GraphLayerObject::update(UpdateAction act)
 {
     if(act==BackStep){
-        if(storage.size()==0)return;
+        if(storage.size()==1)return;
         storage.pop_front();
+
         QImage image=storage.front();
         image=image.convertToFormat(QImage::Format_ARGB32);
 
@@ -132,6 +146,23 @@ void GraphLayerObject::cancelHide()
 {
     this->setStyleSheet("background-color:rgba(0,0,0,0);border:1px solid rgba(255,255,255,100);");
     this->setVisible(true);
+}
+
+void GraphLayerObject::operator=(const GraphLayerObject &obj)
+{
+
+    this->setImage(obj.pixmap(Qt::ReturnByValue).toImage());
+    this->setMaximumSize(obj.size());
+    this->setMinimumSize(obj.size());
+
+    while(this->storage.size()>0){
+        this->storage.pop_back();
+    }
+    ImageNode* node=obj.storage.back();
+    while(node!=NULL){
+        this->storage.push(node->Image());
+        node=node->pre;
+    }
 }
 
 GraphLayer *GraphLayerObject::getParent()
