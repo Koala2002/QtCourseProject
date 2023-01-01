@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Painter_t {
-    QByteArrayData data[20];
-    char stringdata0[276];
+    QByteArrayData data[18];
+    char stringdata0[240];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -49,9 +49,7 @@ QT_MOC_LITERAL(13, 145, 11), // "ColorChange"
 QT_MOC_LITERAL(14, 157, 11), // "ShapeChange"
 QT_MOC_LITERAL(15, 169, 10), // "ToolChange"
 QT_MOC_LITERAL(16, 180, 25), // "on_ColorDisplayer_clicked"
-QT_MOC_LITERAL(17, 206, 30), // "on_PenSizeControl_valueChanged"
-QT_MOC_LITERAL(18, 237, 4), // "arg1"
-QT_MOC_LITERAL(19, 242, 33) // "on_GraphLayerDisplayerItemCli..."
+QT_MOC_LITERAL(17, 206, 33) // "on_GraphLayerDisplayerItemCli..."
 
     },
     "Painter\0addGraphLayer\0\0img\0pos\0"
@@ -60,7 +58,6 @@ QT_MOC_LITERAL(19, 242, 33) // "on_GraphLayerDisplayerItemCli..."
     "SaveFile\0OpenFile\0BackToPreStep\0"
     "CancelBackToAction\0ColorChange\0"
     "ShapeChange\0ToolChange\0on_ColorDisplayer_clicked\0"
-    "on_PenSizeControl_valueChanged\0arg1\0"
     "on_GraphLayerDisplayerItemClicked"
 };
 #undef QT_MOC_LITERAL
@@ -71,7 +68,7 @@ static const uint qt_meta_data_Painter[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      17,   14, // methods
+      16,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -79,23 +76,22 @@ static const uint qt_meta_data_Painter[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    2,   99,    2, 0x08 /* Private */,
-       1,    1,  104,    2, 0x28 /* Private | MethodCloned */,
-       1,    0,  107,    2, 0x28 /* Private | MethodCloned */,
-       5,    0,  108,    2, 0x08 /* Private */,
-       6,    0,  109,    2, 0x08 /* Private */,
-       7,    0,  110,    2, 0x08 /* Private */,
-       8,    0,  111,    2, 0x08 /* Private */,
-       9,    0,  112,    2, 0x08 /* Private */,
-      10,    0,  113,    2, 0x08 /* Private */,
-      11,    0,  114,    2, 0x08 /* Private */,
-      12,    0,  115,    2, 0x08 /* Private */,
-      13,    0,  116,    2, 0x08 /* Private */,
-      14,    0,  117,    2, 0x08 /* Private */,
-      15,    0,  118,    2, 0x08 /* Private */,
-      16,    0,  119,    2, 0x08 /* Private */,
-      17,    1,  120,    2, 0x08 /* Private */,
-      19,    0,  123,    2, 0x08 /* Private */,
+       1,    2,   94,    2, 0x08 /* Private */,
+       1,    1,   99,    2, 0x28 /* Private | MethodCloned */,
+       1,    0,  102,    2, 0x28 /* Private | MethodCloned */,
+       5,    0,  103,    2, 0x08 /* Private */,
+       6,    0,  104,    2, 0x08 /* Private */,
+       7,    0,  105,    2, 0x08 /* Private */,
+       8,    0,  106,    2, 0x08 /* Private */,
+       9,    0,  107,    2, 0x08 /* Private */,
+      10,    0,  108,    2, 0x08 /* Private */,
+      11,    0,  109,    2, 0x08 /* Private */,
+      12,    0,  110,    2, 0x08 /* Private */,
+      13,    0,  111,    2, 0x08 /* Private */,
+      14,    0,  112,    2, 0x08 /* Private */,
+      15,    0,  113,    2, 0x08 /* Private */,
+      16,    0,  114,    2, 0x08 /* Private */,
+      17,    0,  115,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::QImage, QMetaType::QPoint,    3,    4,
@@ -113,7 +109,6 @@ static const uint qt_meta_data_Painter[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   18,
     QMetaType::Void,
 
        0        // eod
@@ -140,8 +135,7 @@ void Painter::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 12: _t->ShapeChange(); break;
         case 13: _t->ToolChange(); break;
         case 14: _t->on_ColorDisplayer_clicked(); break;
-        case 15: _t->on_PenSizeControl_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 16: _t->on_GraphLayerDisplayerItemClicked(); break;
+        case 15: _t->on_GraphLayerDisplayerItemClicked(); break;
         default: ;
         }
     }
@@ -176,13 +170,13 @@ int Painter::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 17)
+        if (_id < 16)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 17;
+        _id -= 16;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 17)
+        if (_id < 16)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 17;
+        _id -= 16;
     }
     return _id;
 }

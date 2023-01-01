@@ -60,6 +60,7 @@ public:
     GraphLayerObject(GraphLayer *parent=new GraphLayer(),QImage img=QImage(800,700,QImage::Format_ARGB32));
     ~GraphLayerObject();//刪除圖層
 
+    QImage getPreImage();//取得上一次作畫圖片
     void setImage(QImage img);//設定圖片
     void update(QImage img);//更新,放入圖片
     void update(UpdateAction act);//更新,復原、重做

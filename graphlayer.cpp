@@ -100,6 +100,11 @@ GraphLayerObject::~GraphLayerObject()
 
 }
 
+QImage GraphLayerObject::getPreImage()
+{
+    return storage.front();
+}
+
 //設定圖片
 void GraphLayerObject::setImage(QImage img)
 {

@@ -8,6 +8,7 @@ release/main.o
 release/painter.o
 release/painterlabel.o
 release/shapepainter.o
+release/valuecontroller.o
 release/qrc_PainterIcon.o
 release/moc_blurrypainter.o
 release/moc_bucketpainter.o
@@ -17,3 +18,4 @@ release/moc_imagestorage.o
 release/moc_painter.o
 release/moc_painterlabel.o
 release/moc_shapepainter.o
+release/moc_valuecontroller.o

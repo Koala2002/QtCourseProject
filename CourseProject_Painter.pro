@@ -18,7 +18,8 @@ SOURCES += \
     main.cpp \
     painter.cpp \
     painterlabel.cpp \
-    shapepainter.cpp
+    shapepainter.cpp \
+    valuecontroller.cpp
 
 HEADERS += \
     blurrypainter.h \
@@ -29,7 +30,8 @@ HEADERS += \
     imagestorage.h \
     painter.h \
     painterlabel.h \
-    shapepainter.h
+    shapepainter.h \
+    valuecontroller.h
 
 FORMS += \
     painter.ui

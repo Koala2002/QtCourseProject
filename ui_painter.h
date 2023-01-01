@@ -20,7 +20,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
-#include <QtWidgets/QSpinBox>
+#include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -32,7 +32,13 @@ class Ui_Painter
 {
 public:
     QWidget *centralwidget;
+    QVBoxLayout *verticalLayout_6;
     QHBoxLayout *horizontalLayout_5;
+    QGroupBox *ToolUseNowDisplayLayout;
+    QVBoxLayout *verticalLayout_7;
+    QLabel *UseToolIcon;
+    QStackedWidget *ValueControlRegion;
+    QHBoxLayout *WorkRegion;
     QGroupBox *PainterToolBox;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *PainterToolBoxLayout;
@@ -46,7 +52,6 @@ public:
     QPushButton *DrawShape;
     QPushButton *Bucket;
     QPushButton *BlurryTool;
-    QSpinBox *PenSizeControl;
     PainterLabel *ColorDisplayer;
     QGroupBox *ColorBox;
     QHBoxLayout *horizontalLayout_4;
@@ -85,18 +90,47 @@ public:
     {
         if (Painter->objectName().isEmpty())
             Painter->setObjectName(QString::fromUtf8("Painter"));
-        Painter->resize(1090, 695);
+        Painter->resize(1150, 780);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(Painter->sizePolicy().hasHeightForWidth());
         Painter->setSizePolicy(sizePolicy);
-        Painter->setMinimumSize(QSize(1088, 694));
+        Painter->setMinimumSize(QSize(1088, 750));
         Painter->setMouseTracking(true);
         centralwidget = new QWidget(Painter);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        horizontalLayout_5 = new QHBoxLayout(centralwidget);
+        verticalLayout_6 = new QVBoxLayout(centralwidget);
+        verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
+        horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        ToolUseNowDisplayLayout = new QGroupBox(centralwidget);
+        ToolUseNowDisplayLayout->setObjectName(QString::fromUtf8("ToolUseNowDisplayLayout"));
+        ToolUseNowDisplayLayout->setMinimumSize(QSize(125, 60));
+        ToolUseNowDisplayLayout->setMaximumSize(QSize(125, 60));
+        verticalLayout_7 = new QVBoxLayout(ToolUseNowDisplayLayout);
+        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        UseToolIcon = new QLabel(ToolUseNowDisplayLayout);
+        UseToolIcon->setObjectName(QString::fromUtf8("UseToolIcon"));
+        UseToolIcon->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_7->addWidget(UseToolIcon);
+
+
+        horizontalLayout_5->addWidget(ToolUseNowDisplayLayout);
+
+        ValueControlRegion = new QStackedWidget(centralwidget);
+        ValueControlRegion->setObjectName(QString::fromUtf8("ValueControlRegion"));
+        ValueControlRegion->setMinimumSize(QSize(0, 60));
+        ValueControlRegion->setMaximumSize(QSize(16777215, 60));
+
+        horizontalLayout_5->addWidget(ValueControlRegion);
+
+
+        verticalLayout_6->addLayout(horizontalLayout_5);
+
+        WorkRegion = new QHBoxLayout();
+        WorkRegion->setObjectName(QString::fromUtf8("WorkRegion"));
         PainterToolBox = new QGroupBox(centralwidget);
         PainterToolBox->setObjectName(QString::fromUtf8("PainterToolBox"));
         PainterToolBox->setMinimumSize(QSize(125, 0));
@@ -199,21 +233,6 @@ public:
 
 
         ToolLayout->addLayout(horizontalLayout_3);
-
-        PenSizeControl = new QSpinBox(PainterToolBox);
-        PenSizeControl->setObjectName(QString::fromUtf8("PenSizeControl"));
-        sizePolicy2.setHeightForWidth(PenSizeControl->sizePolicy().hasHeightForWidth());
-        PenSizeControl->setSizePolicy(sizePolicy2);
-        PenSizeControl->setMinimumSize(QSize(100, 35));
-        PenSizeControl->setMaximumSize(QSize(100, 35));
-        PenSizeControl->setFont(font);
-        PenSizeControl->setLayoutDirection(Qt::LeftToRight);
-        PenSizeControl->setAlignment(Qt::AlignCenter);
-        PenSizeControl->setMinimum(1);
-        PenSizeControl->setMaximum(32);
-        PenSizeControl->setValue(10);
-
-        ToolLayout->addWidget(PenSizeControl);
 
         ColorDisplayer = new PainterLabel(PainterToolBox);
         ColorDisplayer->setObjectName(QString::fromUtf8("ColorDisplayer"));
@@ -385,7 +404,7 @@ public:
         horizontalLayout_2->addLayout(PainterToolBoxLayout);
 
 
-        horizontalLayout_5->addWidget(PainterToolBox);
+        WorkRegion->addWidget(PainterToolBox);
 
         graphicsView = new QGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
@@ -393,7 +412,7 @@ public:
         graphicsView->setMouseTracking(true);
         graphicsView->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
 
-        horizontalLayout_5->addWidget(graphicsView);
+        WorkRegion->addWidget(graphicsView);
 
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setSpacing(10);
@@ -410,7 +429,7 @@ public:
         GraphLayerDisplayerScrollArea->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 123, 416));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 123, 402));
         GraphLayerDisplayerScrollArea->setWidget(scrollAreaWidgetContents_2);
 
         verticalLayout_3->addWidget(GraphLayerDisplayerScrollArea);
@@ -462,13 +481,16 @@ public:
         verticalLayout_3->addLayout(GraphLayerOperatorLayout);
 
 
-        horizontalLayout_5->addLayout(verticalLayout_3);
+        WorkRegion->addLayout(verticalLayout_3);
+
+
+        verticalLayout_6->addLayout(WorkRegion);
 
         Painter->setCentralWidget(centralwidget);
         menubar = new QMenuBar(Painter);
         menubar->setObjectName(QString::fromUtf8("menubar"));
         menubar->setEnabled(true);
-        menubar->setGeometry(QRect(0, 0, 1090, 30));
+        menubar->setGeometry(QRect(0, 0, 1150, 30));
         sizePolicy.setHeightForWidth(menubar->sizePolicy().hasHeightForWidth());
         menubar->setSizePolicy(sizePolicy);
         menubar->setMaximumSize(QSize(16777215, 16777215));
@@ -487,6 +509,8 @@ public:
     void retranslateUi(QMainWindow *Painter)
     {
         Painter->setWindowTitle(QCoreApplication::translate("Painter", "Painter", nullptr));
+        ToolUseNowDisplayLayout->setTitle(QString());
+        UseToolIcon->setText(QString());
         PainterToolBox->setTitle(QString());
         DragTool->setText(QString());
         DrawPen->setText(QString());

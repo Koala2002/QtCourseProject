@@ -8,6 +8,7 @@ debug/main.o
 debug/painter.o
 debug/painterlabel.o
 debug/shapepainter.o
+debug/valuecontroller.o
 debug/qrc_PainterIcon.o
 debug/moc_blurrypainter.o
 debug/moc_bucketpainter.o
@@ -17,3 +18,4 @@ debug/moc_imagestorage.o
 debug/moc_painter.o
 debug/moc_painterlabel.o
 debug/moc_shapepainter.o
+debug/moc_valuecontroller.o

@@ -15,10 +15,10 @@ class BlurryPainter : public BucketPainter
 public:
     explicit BlurryPainter(QObject *parent = nullptr);
 
-    QImage Blurrying(QImage img,QPoint Ori,int penSize);//就是模糊
+    QImage Blurrying(QImage img,QPoint Ori,int penSize,int weight);//就是模糊
 
 private:
-    QColor Blur(QImage img,QPoint Ori);//模糊此點
+    QColor Blur(QImage img,QPoint Ori,int weight);//模糊此點
 
     double PointDis(QPoint p1,QPoint p2);//兩點距離
 

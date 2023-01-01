@@ -19,13 +19,13 @@ void BucketPainter::ColorDiffuse(QPoint p)
     img->setPixelColor(p,bucketColor);
 
     while(!bfs.empty()){
+        img->setPixelColor(bfs.front(),bucketColor);
         for(flowDir DIR=UP;DIR<=RIGHT;DIR=flowDir(DIR+1)){
             QPoint pos=bfs.front();
+
             pos+=FlowPos(DIR);
             if(CanFlow(pos)==true){
-                //qDebug()<<pos;
-                Colored[pos.y()][pos.x()]=true;
-                img->setPixelColor(pos,bucketColor);
+                Colored[pos.y()][pos.x()]=true;               
                 bfs.push(pos);
             }
         }

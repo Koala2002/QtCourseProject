@@ -30,5 +30,6 @@
         <file>icons/Closepaint-bucket.png</file>
         <file>icons/Closeshapetool.png</file>
         <file>icons/Closedelete.png</file>
+        <file>icons/penModeControlArrow.png</file>
     </qresource>
 </RCC>

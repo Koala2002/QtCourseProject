@@ -7,23 +7,18 @@ Painter::Painter(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //----滑鼠鍵盤按鍵按下初值設定----//
+    //----各事件判斷狀態初值設定----//
     mouse_pressed=false;
     CtrlKeyPressed=false;
     LShiftKeyPressed=false;
+    SceneHovered=false;
     //----滑鼠鍵盤按鍵按下初值設定----//
 
-    //----畫筆style預設值設定(雖然應該也只會用這個)----//
-    pen.setCapStyle(Qt::RoundCap);
-    pen.setJoinStyle(Qt::RoundJoin);
-    penSize=10;//畫筆大小初始化
-    //----畫筆style預設值設定(雖然應該也只會用這個)----//
+    PainterValueController=new ValueController(ui->ValueControlRegion);
 
-    ColorNow=qRgba(0,0,0,255);//預設顏色為黑色
 
     Ptool=DrawPen;//工具初始化為畫筆
-
-    ui->PenSizeControl->setValue(10);//畫筆大小調整工具初始化
+    ui->UseToolIcon->setPixmap(QPixmap::fromImage(QImage(":/icons/brush.png")).scaled(30,30,Qt::KeepAspectRatio));
 
     mouse_pre=QPointF(-1,-1);//預設前一個滑鼠座標為(-1,-1)
 
@@ -46,8 +41,6 @@ Painter::Painter(QWidget *parent)
     setTool();//設定工具
     setShape();//設定形狀工具
     UISetting();//UI介面設定
-
-
 }
 
 Painter::~Painter()
@@ -190,7 +183,7 @@ void Painter::UISetting(){
 
     //----調色盤預設顏色ui設定----//
     ui->ColorDisplayer->setText("");
-    QColor c(ColorNow);
+    QColor c(PainterValueController->getColor());
     ui->ColorDisplayer->setStyleSheet(
         "border-radius: 25px;"
         "background-color:rgb("+QString::number(c.red())+","+QString::number(c.green())+","+QString::number(c.blue())+");"
@@ -223,37 +216,41 @@ void Painter::UISetting(){
         }
         if(child==ui->CopyGraphLayer||child==ui->DeleteGraphLayer
             ||child==ui->MergeGraphLayer||child==ui->HideGraphLayer){
-
+            child->setIconSize(QSize(20,20));
+            setCloseModeIcon(child);
             child->setEnabled(false);
 
             child->setStyleSheet(
-                "QPushButton {\
-                    background-color: rgb(100,100,100);\
-                    border: 1px solid rgb(200,200,200);\
-                    padding: 10px;\
-                    border-radius: 10px;\
-                }"
+                "QPushButton {"
+                    "background-color: rgb(100,100,100);"
+                    "border: 2px solid rgb(200,200,200);"
+                    "padding: 10px;"
+                    "border-radius: 10px;"
+                "}"
             );
 
             continue;
         }
+
+        child->setIconSize(QSize(20,20));
+        setOpenModeIcon(child);
         child->setStyleSheet(
-            "QPushButton {\
-                background-color: rgb(25,25,25);\
-                border: 1px solid rgb(245,245,245);\
-                padding: 10px;\
-                border-radius: 10px;\
-            }"
+            "QPushButton {"
+                "background-color: rgb(25,25,25);"
+                "border: 2px solid rgb(245,245,245);"
+                "padding: 10px;"
+                "border-radius: 10px;"
+            "}"
 
-            "QPushButton:hover {\
-                background-color: rgb(55,55,55);\
-                border: 1px solid rgb(255,255,255);\
-            }"
+            "QPushButton:hover {"
+                "background-color: rgb(55,55,55);"
+                "border: 2px solid rgb(255,255,255);"
+            "}"
 
-            "QPushButton:pressed {\
-                background-color: rgb(55,55,55);\
-                border: 1px solid rgb(220,220,220);\
-            }"
+            "QPushButton:pressed {"
+                "background-color: rgb(55,55,55);"
+                "border: 2px solid rgb(220,220,220);"
+            "}"
         );
     }
     //----主視窗內部QPushButton顏色設定----//
@@ -269,60 +266,55 @@ void Painter::UISetting(){
 
     //----功能選單UI Background Color設定----//
     menuBar()->setStyleSheet(
-        "QMenuBar::item{\
-            color:rgb(35,35,35);\
-            background-color:rgb(235,235,235);\
-        }"
-        "QMenuBar::item:selected {\
-            color:rgb(35,35,35);\
-            background-color:rgb(205,205,205);\
-        }"
-        "QMenuBar::item:pressed {\
-            color:rgb(35,35,35);\
-            background-color:rgb(205,205,205);\
-        }"
+        "QMenuBar::item{"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(235,235,235);"
+        "}"
+        "QMenuBar::item:selected {"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(205,205,205);"
+        "}"
+        "QMenuBar::item:pressed {"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(205,205,205);"
+        "}"
     );
 
     fileMenu->setStyleSheet(
-        "QMenu{\
-            background-color:rgb(235,235,235);\
-        }"
-        "QMenu::item{\
-            color:rgb(35,35,35);\
-            background-color:rgb(235,235,235);\
-        }"
-        "QMenu::item:selected {\
-            color:rgb(35,35,35);\
-            background-color:rgb(205,205,205);\
-        }"
-        "QMenu::item:pressed {\
-            color:rgb(35,35,35);\
-            background-color:rgb(205,205,205);\
-        }"
+        "QMenu{"
+            "background-color:rgb(235,235,235);"
+        "}"
+        "QMenu::item{"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(235,235,235);"
+        "}"
+        "QMenu::item:selected {"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(205,205,205);"
+        "}"
+        "QMenu::item:pressed {"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(205,205,205);"
+        "}"
     );
     toolMenu->setStyleSheet(
-        "QMenu{\
-            background-color:rgb(235,235,235);\
-        }"
-        "QMenu::item{\
-            color:rgb(35,35,35);\
-            background-color:rgb(235,235,235);\
-        }"
-        "QMenu::item:selected {\
-            color:rgb(35,35,35);\
-            background-color:rgb(205,205,205);\
-        }"
-        "QMenu::item:pressed {\
-            color:rgb(35,35,35);\
-            background-color:rgb(205,205,205);\
-        }"
+        "QMenu{"
+            "background-color:rgb(235,235,235);"
+        "}"
+        "QMenu::item{"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(235,235,235);"
+        "}"
+        "QMenu::item:selected {"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(205,205,205);"
+        "}"
+        "QMenu::item:pressed {"
+            "color:rgb(35,35,35);"
+            "background-color:rgb(205,205,205);"
+        "}"
     );
     //----功能選單UI Background Color設定----//
-
-    //----畫筆大小調整 UI Background Color設定----//
-    ui->PenSizeControl->setStyleSheet("background-color:rgba(255,255,255,200);");
-    //----畫筆大小調整 UI Background Color設定----//
-
 
     ui->GraphLayerOperatorLayout->setAlignment(Qt::AlignHCenter);
 
@@ -338,39 +330,12 @@ void Painter::UISetting(){
     );
     //----縮放倍率顯示器UI設定----//
 
-    //----Icon Set----//
-    ui->DrawPen->setIconSize(QSize(30,30));
-    ui->DrawPen->setIcon(QIcon(QPixmap(":/icons/brush.png")));
-    ui->Eraser->setIconSize(QSize(30,30));
-    ui->Eraser->setIcon(QIcon(QPixmap(":/icons/eraser.png")));
-    ui->Bucket->setIconSize(QSize(30,30));
-    ui->Bucket->setIcon(QIcon(QPixmap(":/icons/paint-bucket.png")));
-    ui->DragTool->setIconSize(QSize(30,30));
-    ui->DragTool->setIcon(QIcon(QPixmap(":/icons/drag.png")));
-    ui->DrawShape->setIconSize(QSize(30,30));
-    ui->DrawShape->setIcon(QIcon(QPixmap(":/icons/shapetool.png")));
-    ui->BlurryTool->setIconSize(QSize(30,30));
-    ui->BlurryTool->setIcon(QIcon(QPixmap(":/icons/blurry.png")));
-
+    //----shape Icon Set----//
     ui->Circle->setIconSize(QSize(20,20));
     ui->Circle->setIcon(QIcon(QPixmap(":/icons/CircleIcon.png")));
     ui->Rectangle->setIconSize(QSize(20,20));
     ui->Rectangle->setIcon(QIcon(QPixmap(":/icons/RectangleIcon.png")));
 
-    ui->AddGraphLayer->setIconSize(QSize(20,20));
-    ui->AddGraphLayer->setIcon(QIcon(QPixmap(":/icons/add.png")));
-
-    ui->DeleteGraphLayer->setIconSize(QSize(20,20));
-    ui->DeleteGraphLayer->setIcon(QIcon(QPixmap(":/icons/delete.png")));
-
-    ui->MergeGraphLayer->setIconSize(QSize(20,20));
-    ui->MergeGraphLayer->setIcon(QIcon(QPixmap(":/icons/merge.png")));
-
-    ui->CopyGraphLayer->setIconSize(QSize(20,20));
-    ui->CopyGraphLayer->setIcon(QIcon(QPixmap(":/icons/copy.png")));
-
-    ui->HideGraphLayer->setIconSize(QSize(20,20));
-    ui->HideGraphLayer->setIcon(QIcon(QPixmap(":/icons/hide.png")));
     //----Icon Set----//
 }
 
@@ -378,19 +343,19 @@ void Painter::UISetting(){
 void Painter::ColorChange(){
     QCheckBox *colorBox=qobject_cast<QCheckBox*>(sender());
 
-    if(colorBox==ui->RedColor)ColorNow=qRgba(255,0,0,255);
-    if(colorBox==ui->GreenColor)ColorNow=qRgba(0,255,0,255);
-    if(colorBox==ui->BlueColor)ColorNow=qRgba(0,0,255,255);
-    if(colorBox==ui->PurpleColor)ColorNow=qRgba(255,0,255,255);
-    if(colorBox==ui->BlackColor)ColorNow=qRgba(0,0,0,255);
-    if(colorBox==ui->YellowColor)ColorNow=qRgba(255,255,0,255);
-    if(colorBox==ui->CyanColor)ColorNow=qRgba(0,255,255,255);
-    if(colorBox==ui->OrangeColor)ColorNow=qRgba(255,150,0,255);
-    if(colorBox==ui->WhiteColor)ColorNow=qRgba(255,255,255,255);
-    if(colorBox==ui->PinkColor)ColorNow=qRgba(255,100,150,255);
+    if(colorBox==ui->RedColor)PainterValueController->setColor(QColor(255,0,0,255));
+    if(colorBox==ui->GreenColor)PainterValueController->setColor(QColor(0,255,0,255));
+    if(colorBox==ui->BlueColor)PainterValueController->setColor(QColor(0,0,255,255));
+    if(colorBox==ui->PurpleColor)PainterValueController->setColor(QColor(255,0,255,255));
+    if(colorBox==ui->BlackColor)PainterValueController->setColor(QColor(0,0,0,255));
+    if(colorBox==ui->YellowColor)PainterValueController->setColor(QColor(255,255,0,255));
+    if(colorBox==ui->CyanColor)PainterValueController->setColor(QColor(0,255,255,255));
+    if(colorBox==ui->OrangeColor)PainterValueController->setColor(QColor(255,150,0,255));
+    if(colorBox==ui->WhiteColor)PainterValueController->setColor(QColor(255,255,255,255));
+    if(colorBox==ui->PinkColor)PainterValueController->setColor(QColor(255,100,150,255));
 
     //----調色盤預設顏色ui設定----//
-    QColor c(ColorNow);
+    QColor c(PainterValueController->getColor());
     ui->ColorDisplayer->setStyleSheet(
         "border-radius: 25px;"
         "background-color:rgb("+QString::number(c.red())+","+QString::number(c.green())+","+QString::number(c.blue())+");"
@@ -410,22 +375,47 @@ void Painter::ShapeChange()
 void Painter::ToolChange(){
     QPushButton *btn=qobject_cast<QPushButton*>(sender());
 
-    if(btn==ui->DrawPen)Ptool=DrawPen;
-    if(btn==ui->Eraser)Ptool=Eraser;
-    if(btn==ui->Bucket)Ptool=Bucket;
-    if(btn==ui->DragTool)Ptool=DragTool;
-    if(btn==ui->DrawShape)Ptool=DrawShape;
-    if(btn==ui->BlurryTool)Ptool=Blurry;
+    if(btn==ui->DrawPen){
+        Ptool=DrawPen;
+        PainterValueController->setPage(ValueController::PenPage);
+        ui->UseToolIcon->setPixmap(QPixmap::fromImage(QImage(":/icons/brush.png")).scaled(30,30,Qt::KeepAspectRatio));
+    }
+    if(btn==ui->Eraser){
+        Ptool=Eraser;
+        PainterValueController->setPage(ValueController::EraserPage);
+        ui->UseToolIcon->setPixmap(QPixmap::fromImage(QImage(":/icons/eraser.png")).scaled(30,30,Qt::KeepAspectRatio));
+    }
+    if(btn==ui->Bucket){
+        Ptool=Bucket;
+        PainterValueController->setPage(ValueController::BucketPage);
+        ui->UseToolIcon->setPixmap(QPixmap::fromImage(QImage(":/icons/paint-bucket.png")).scaled(30,30,Qt::KeepAspectRatio));
+    }
+    if(btn==ui->DragTool){
+        Ptool=DragTool;
+        PainterValueController->setPage(ValueController::DragPage);
+        ui->UseToolIcon->setPixmap(QPixmap::fromImage(QImage(":/icons/drag.png")).scaled(30,30,Qt::KeepAspectRatio));
+    }
+    if(btn==ui->DrawShape){
+        Ptool=DrawShape;
+        PainterValueController->setPage(ValueController::ShapePage);
+        ui->UseToolIcon->setPixmap(QPixmap::fromImage(QImage(":/icons/shapetool.png")).scaled(30,30,Qt::KeepAspectRatio));
+    }
+    if(btn==ui->BlurryTool){
+        Ptool=Blurry;
+        PainterValueController->setPage(ValueController::BlurryPage);
+        ui->UseToolIcon->setPixmap(QPixmap::fromImage(QImage(":/icons/blurry.png")).scaled(30,30,Qt::KeepAspectRatio));
+    }
 }
 
 void Painter::setToolCursor(PainterTools tool)
 {
-    if(Ptool==DrawPen)setCursor(QPixmap(":/icons/penCursor.png").scaled(20,20,Qt::KeepAspectRatio));
-    if(Ptool==Eraser)setCursor(QPixmap(":/icons/eraserCursor.png").scaled(20,20,Qt::KeepAspectRatio));
-    if(Ptool==Bucket)setCursor(QPixmap(":/icons/bucketCursor.png").scaled(20,20,Qt::KeepAspectRatio));
-    if(Ptool==DrawShape)setCursor(QPixmap(":/icons/penCursor.png").scaled(20,20,Qt::KeepAspectRatio));
-    if(Ptool==Blurry)setCursor(QPixmap(":/icons/blurryCursor.png").scaled(20,20,Qt::KeepAspectRatio));
-    if(Ptool==DragTool)setCursor(QCursor(Qt::OpenHandCursor));
+    if(tool==DrawPen)setCursor(QPixmap(":/icons/penCursor.png").scaled(20,20,Qt::KeepAspectRatio));
+    if(tool==Eraser)setCursor(QPixmap(":/icons/eraserCursor.png").scaled(20,20,Qt::KeepAspectRatio));
+    if(tool==Bucket)setCursor(QPixmap(":/icons/bucketCursor.png").scaled(20,20,Qt::KeepAspectRatio));
+    if(tool==DrawShape)setCursor(QPixmap(":/icons/penCursor.png").scaled(20,20,Qt::KeepAspectRatio));
+    if(tool==Blurry)setCursor(QPixmap(":/icons/blurryCursor.png").scaled(20,20,Qt::KeepAspectRatio));
+    if(tool==DragTool)setCursor(QCursor(Qt::OpenHandCursor));
+
 }
 
 void Painter::setCloseModeIcon(QWidget *obj)
@@ -458,43 +448,57 @@ void Painter::setOpenModeIcon(QWidget *obj)
     if(obj==ui->HideGraphLayer)ui->HideGraphLayer->setIcon(QIcon(QPixmap(":/icons/hide.png")));
 }
 
-
 //事件過濾器，用於過濾graphicView抓取到的事件
 bool Painter::eventFilter(QObject *obj, QEvent *event)
 {
     if(event->type()==QHoverEvent::Enter){
+        SceneHovered=true;
         setToolCursor(Ptool);
+        return true;
     }
     if(event->type()==QHoverEvent::Leave){
+        SceneHovered=false;
         setCursor(QCursor(Qt::ArrowCursor));
+        return true;
     }
     if(event->type()==QEvent::MouseMove){
         QMouseEvent *ent=static_cast<QMouseEvent*>(event);
         Painter::mouseMoveEvent(ent);
         return true;
     }
-    else if(event->type()==QEvent::MouseButtonPress){
+    if(event->type()==QEvent::MouseButtonPress){
         QMouseEvent *ent=static_cast<QMouseEvent*>(event);
         Painter::mousePressEvent(ent);
         return true;
     }
-    else if(event->type()==QEvent::MouseButtonRelease){
+    if(event->type()==QEvent::MouseButtonRelease){
         QMouseEvent *ent=static_cast<QMouseEvent*>(event);
         Painter::mouseReleaseEvent(ent);
         return true;
     }
+    if(event->type()==QEvent::MouseButtonDblClick){
+        ui->graphicsView->setFocus();
+        QMouseEvent *ent=static_cast<QMouseEvent*>(event);
+        Painter::mousePressEvent(ent);
+        return true;
+    }
+
     return QObject::eventFilter(obj,event);
 }
 
 //滑鼠按下
 void Painter::mousePressEvent(QMouseEvent *event)
 {
+
+    if(Ptool==DragTool&&SceneHovered==true)setCursor(QCursor(Qt::ClosedHandCursor));
+    else if(SceneHovered==false)setCursor(QCursor(Qt::ArrowCursor));
+
     if(ui->graphicsView->hasFocus()==false)return;
     if(CtrlKeyPressed==true)return;
     mouse_pressed=true;
+
     if(event->buttons()!=Qt::LeftButton)return;
     if(GLayer->Top()==NULL)return;
-
     getMouse(event);//取得滑鼠座標
 
     //超出範圍
@@ -519,7 +523,6 @@ void Painter::mousePressEvent(QMouseEvent *event)
     }
 
     if(Ptool==DragTool){//選取工具使用
-        setCursor(QCursor(Qt::ClosedHandCursor));
         if(mouse_pre==QPointF(-1,-1))mouse_pre=mouse_now;
         GLayer->Top()->move(GLayer->Top()->pos()+(mouse_now-mouse_pre).toPoint());
     }
@@ -529,8 +532,8 @@ void Painter::mousePressEvent(QMouseEvent *event)
         if(mouse_pre==QPointF(-1,-1))mouse_pre=mouse_now;
 
         ShapeTool.CreatNewShape();
-        QImage shapeImg(1,1,QImage::Format_ARGB32);
-        if(ShapeTool.Shape()==ShapePainter::Rectangle)shapeImg.fill(ColorNow);
+        QImage shapeImg(1,1,QImage::Format_ARGB32_Premultiplied);
+        if(ShapeTool.Shape()==ShapePainter::Rectangle)shapeImg.fill(PainterValueController->getColor());
         if(ShapeTool.Shape()==ShapePainter::Circle){
             shapeImg.fill(Qt::transparent);
         }
@@ -541,7 +544,13 @@ void Painter::mousePressEvent(QMouseEvent *event)
 
     if(Ptool==Blurry){
         MousePositionOffset();
-        QImage newImg=BlurryTool.Blurrying(GLayer->Top()->pixmap(Qt::ReturnByValue).toImage(),mouse_now.toPoint(),penSize);
+        PainterValueController->loadTool(ValueController::BlurryValue);
+        QImage newImg=BlurryTool.Blurrying(
+            GLayer->Top()->pixmap(Qt::ReturnByValue).toImage(),
+            mouse_now.toPoint(),
+            PainterValueController->getPen().width(),
+            PainterValueController->getBlurryWeight()
+        );
         updatingImage(newImg);
     }
     mouse_pre=mouse_now;
@@ -549,19 +558,23 @@ void Painter::mousePressEvent(QMouseEvent *event)
 
 //滑鼠放開
 void Painter::mouseReleaseEvent(QMouseEvent *event){
-    if(Ptool==DragTool)setCursor(QCursor(Qt::OpenHandCursor));
+    if(Ptool==DragTool&&SceneHovered==true)setCursor(QCursor(Qt::OpenHandCursor));
+    else if(Ptool==DragTool)setCursor(QCursor(Qt::ArrowCursor));
 
     if(CtrlKeyPressed==true)return;
     mouse_pressed=false;
-    if(mouse_pre==QPointF(-1,-1))return;
     if(GLayer->Top()==NULL)return;
-
+    if(mouse_pre==QPointF(-1,-1)){
+        if(GLayer->Top()->pixmap(Qt::ReturnByValue).toImage()!=GLayer->Top()->getPreImage())
+            GLayer->Top()->update(GLayer->Top()->pixmap(Qt::ReturnByValue).toImage());
+        return;
+    }
 
 
     if(Ptool==DrawShape){
 
         //----圖形工具繪圖合併----//
-        QImage newImg(GLayer->Top()->size(),QImage::Format_ARGB32);
+        QImage newImg(GLayer->Top()->size(),QImage::Format_ARGB32_Premultiplied);
         QPainter  painter(&newImg);
         painter.drawImage(0,0,GLayer->Top()->pixmap(Qt::ReturnByValue).toImage());
 
@@ -570,12 +583,12 @@ void Painter::mouseReleaseEvent(QMouseEvent *event){
         ShapeTool.DrawShapePosMove(mouse_pre,mouse_now);
 
         QImage ShapeImage(ShapeTool.DrawShapeImage(mouse_pre,mouse_now));
-        if(ShapeTool.Shape()==ShapePainter::Rectangle)ShapeImage.fill(ColorNow);
+        if(ShapeTool.Shape()==ShapePainter::Rectangle)ShapeImage.fill(PainterValueController->getColor());
         if(ShapeTool.Shape()==ShapePainter::Circle){
             ShapeImage.fill(Qt::transparent);
             QPainter painter2(&ShapeImage);
-            painter2.setPen(QPen(ColorNow));
-            painter2.setBrush(QBrush(ColorNow));
+            painter2.setPen(QPen(PainterValueController->getColor()));
+            painter2.setBrush(QBrush(PainterValueController->getColor()));
 
             painter2.drawEllipse(0,0,ShapeImage.width()-1,ShapeImage.height()-1);
         }
@@ -652,12 +665,12 @@ void Painter::mouseMoveEvent(QMouseEvent *event){
         ShapeTool.DrawShapePosMove(mouse_pre,mouse_now);//圖形原點校正
 
         QImage newImg=ShapeTool.DrawShapeImage(mouse_pre,mouse_now);
-        if(ShapeTool.Shape()==ShapePainter::Rectangle)newImg.fill(ColorNow);
+        if(ShapeTool.Shape()==ShapePainter::Rectangle)newImg.fill(PainterValueController->getColor());
         if(ShapeTool.Shape()==ShapePainter::Circle){
             newImg.fill(Qt::transparent);
             QPainter painter(&newImg);
-            painter.setPen(QPen(ColorNow));
-            painter.setBrush(QBrush(ColorNow));
+            painter.setPen(QPen(PainterValueController->getColor()));
+            painter.setBrush(QBrush(PainterValueController->getColor()));
 
             painter.drawEllipse(0,0,newImg.size().width()-1,newImg.size().height()-1);
 
@@ -670,7 +683,13 @@ void Painter::mouseMoveEvent(QMouseEvent *event){
 
     if(Ptool==Blurry){
         MousePositionOffset();
-        QImage newImg=BlurryTool.Blurrying(GLayer->Top()->pixmap(Qt::ReturnByValue).toImage(),mouse_now.toPoint(),penSize);
+        PainterValueController->loadTool(ValueController::BlurryValue);
+        QImage newImg=BlurryTool.Blurrying(
+            GLayer->Top()->pixmap(Qt::ReturnByValue).toImage(),
+            mouse_now.toPoint(),
+            PainterValueController->getPen().width(),
+            PainterValueController->getBlurryWeight()
+        );
         updatingImage(newImg);
     }
 
@@ -682,6 +701,7 @@ void Painter::wheelEvent(QWheelEvent *event)
 {
     if(CtrlKeyPressed==false)return;
     else{
+        if(SceneHovered==false)return;
         double ratio=1.15478198;
         if(event->delta()>0&&zoomRatio>0.11){//小數比較所以設下限為0.11避免誤差，實際值為0.1
             ui->graphicsView->scale(ratio,ratio);
@@ -729,7 +749,7 @@ void Painter::keyPressEvent(QKeyEvent *event)
             child->setStyleSheet(
                 "QPushButton {\
                     background-color: rgb(100,100,100);\
-                    border: 1px solid rgb(200,200,200);\
+                    border: 2px solid rgb(200,200,200);\
                     padding: 10px;\
                     border-radius: 10px;\
                 }"
@@ -793,7 +813,7 @@ void Painter::keyReleaseEvent(QKeyEvent *event)
                 child->setStyleSheet(
                     "QPushButton {\
                         background-color: rgb(100,100,100);\
-                        border: 1px solid rgb(200,200,200);\
+                        border: 2px solid rgb(200,200,200);\
                         padding: 10px;\
                         border-radius: 10px;\
                     }"
@@ -804,19 +824,19 @@ void Painter::keyReleaseEvent(QKeyEvent *event)
             child->setStyleSheet(
                 "QPushButton {\
                     background-color: rgb(25,25,25);\
-                    border: 1px solid rgb(245,245,245);\
+                    border: 2px solid rgb(245,245,245);\
                     padding: 10px;\
                     border-radius: 10px;\
                 }"
 
                 "QPushButton:hover {\
                     background-color: rgb(55,55,55);\
-                    border: 1px solid rgb(255,255,255);\
+                    border: 2px solid rgb(255,255,255);\
                 }"
 
                 "QPushButton:pressed {\
                     background-color: rgb(55,55,55);\
-                    border: 1px solid rgb(200,200,200);\
+                    border: 2px solid rgb(200,200,200);\
                 }"
             );
         }
@@ -858,7 +878,7 @@ void Painter::OpenFile()
 
     qDebug()<<GLayer->CanvasSize();
     qDebug()<<image.size();
-    image=image.convertToFormat(QImage::Format_ARGB32);
+    image=image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
     if(GLayer->Top()!=NULL){
         updatingImage(image);
         GLayer->Top()->update(GLayer->Top()->pixmap(Qt::ReturnByValue).toImage());
@@ -902,10 +922,10 @@ void Painter::on_ColorDisplayer_clicked()
     QColor PenColor=QColorDialog::getColor();//選色
     if(!PenColor.isValid())return;//顏色不合理取消後續動作
 
-    ColorNow=PenColor.rgba();//顏色更新
+    PainterValueController->setColor(PenColor);//顏色更新
 
     //----調色盤預設顏色ui設定----//
-    QColor c(ColorNow);
+    QColor c(PainterValueController->getColor());
     ui->ColorDisplayer->setStyleSheet(
         "border-radius: 25px;"
         "background-color:rgb("+QString::number(c.red())+","+QString::number(c.green())+","+QString::number(c.blue())+");"
@@ -944,34 +964,24 @@ QImage Painter::drawingImage(){
 
     QPixmap pic=GLayer->Top()->pixmap(Qt::ReturnByValue);//抓取圖片
     QImage sourceImage=pic.toImage();//來源圖片
-    QImage destImage(sourceImage.width(), sourceImage.height(), QImage::Format_ARGB32);//轉換圖片
+    QImage destImage(sourceImage.width(), sourceImage.height(), QImage::Format_ARGB32_Premultiplied);//轉換圖片
     destImage.fill(Qt::transparent);
     QPainter painter(&destImage);
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    if(Ptool!=Eraser)painter.setCompositionMode(PainterValueController->getPenMode());
+    else painter.setCompositionMode(QPainter::CompositionMode_Source);
     painter.drawImage(0, 0, sourceImage);
     painter.setBackgroundMode(Qt::OpaqueMode);
     painter.setBackground(Qt::transparent);
-    loadingPen(painter);//讀取畫筆
 
-    if(Ptool==DrawPen||Ptool==Eraser)Draw(&painter);//畫圖
-    else if(Ptool==Bucket)BucketDraw(&destImage);
+    if(Ptool==DrawPen||Ptool==Eraser){
+        PainterValueController->loadTool((Ptool==DrawPen)?ValueController::PenValue:ValueController::EraserValue);//讀取畫筆資料
+        painter.setPen(PainterValueController->getPen());
+        Draw(&painter);//畫圖
+    }
+    if(Ptool==Bucket)BucketDraw(&destImage);
     return destImage;
 }
 
-//讀取畫筆
-void Painter::loadingPen(QPainter &painter){
-
-    pen.setWidth(penSize);
-    if(Ptool==DrawPen){
-        pen.setColor(ColorNow);
-        painter.setPen(pen);
-    }
-    else {
-        pen.setColor(Qt::transparent);
-    }
-
-    painter.setPen(pen);
-}
 
 //使用畫筆或橡皮擦作畫
 void Painter::Draw(QPainter* painter){
@@ -982,7 +992,8 @@ void Painter::Draw(QPainter* painter){
 
 //使用水桶作畫
 void Painter::BucketDraw(QImage* img){
-    BucketPainter bucket(img,ColorNow);
+    PainterValueController->loadTool(ValueController::BucketValue);
+    BucketPainter bucket(img,PainterValueController->getColor());
     bucket.ColorDiffuse(mouse_now.toPoint());
 }
 
@@ -1030,12 +1041,12 @@ void Painter::hideGraphLayer()
         ui->GraphLayerOperatorLayout->itemAt(a)->widget()->setEnabled(false);
         setCloseModeIcon(ui->GraphLayerOperatorLayout->itemAt(a)->widget());
         ui->GraphLayerOperatorLayout->itemAt(a)->widget()->setStyleSheet(
-            "QPushButton {\
-                background-color: rgb(100,100,100);\
-                border: 1px solid rgb(200,200,200);\
-                padding: 10px;\
-                border-radius: 10px;\
-            }"
+            "QPushButton {"
+                "background-color: rgb(100,100,100);"
+                "border: 2px solid rgb(200,200,200);"
+                "padding: 10px;"
+                "border-radius: 10px;"
+            "}"
         );
     }
     //----圖層按鈕重設----//
@@ -1054,12 +1065,12 @@ void Painter::deleteGraphLayer(){
         ui->GraphLayerOperatorLayout->itemAt(a)->widget()->setEnabled(false);
         setCloseModeIcon(ui->GraphLayerOperatorLayout->itemAt(a)->widget());
         ui->GraphLayerOperatorLayout->itemAt(a)->widget()->setStyleSheet(
-            "QPushButton {\
-                background-color: rgb(100,100,100);\
-                border: 1px solid rgb(200,200,200);\
-                padding: 10px;\
-                border-radius: 10px;\
-            }"
+            "QPushButton {"
+                "background-color: rgb(100,100,100);"
+                "border: 2px solid rgb(200,200,200);"
+                "padding: 10px;"
+                "border-radius: 10px;"
+            "}"
         );
     }
     //----圖層按鈕重設----//
@@ -1086,12 +1097,12 @@ void Painter::copyGraphLayer(){
         setCloseModeIcon(ui->GraphLayerOperatorLayout->itemAt(a)->widget());
         ui->GraphLayerOperatorLayout->itemAt(a)->widget()->setEnabled(false);
         ui->GraphLayerOperatorLayout->itemAt(a)->widget()->setStyleSheet(
-            "QPushButton {\
-                background-color: rgb(100,100,100);\
-                border: 1px solid rgb(200,200,200);\
-                padding: 10px;\
-                border-radius: 10px;\
-            }"
+            "QPushButton {"
+                "background-color: rgb(100,100,100);"
+                "border: 2px solid rgb(200,200,200);"
+                "padding: 10px;"
+                "border-radius: 10px;"
+            "}"
         );
     }
     //----圖層按鈕重設----//
@@ -1124,7 +1135,7 @@ void Painter::mergeGraphLayer()
     //----找出最左上放的點----//
 
     //----合併----//
-    QImage newImg(range.x()-minPos.x(),range.y()-minPos.y(),QImage::Format_ARGB32);
+    QImage newImg(range.x()-minPos.x(),range.y()-minPos.y(),QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&newImg);
     while(!itemProcess.empty()){
         GraphLayerObject *Gobj=itemProcess.front()->getIdx();
@@ -1142,9 +1153,9 @@ void Painter::mergeGraphLayer()
 
     //----加入合併的圖層後先預設關閉小圖層的功能按鈕使用----//
     GDisplayer->Top()->setStyleSheet(
-        "QLabel{\
-            border:1px solid rgba(255,255,255,100);\
-        }"
+        "QLabel{"
+            "border:1px solid rgba(255,255,255,100);"
+        "}"
     );
 
     //----加入合併的圖層後先預設關閉小圖層的功能按鈕使用----//
@@ -1154,23 +1165,16 @@ void Painter::mergeGraphLayer()
         setCloseModeIcon(ui->GraphLayerOperatorLayout->itemAt(a)->widget());
         ui->GraphLayerOperatorLayout->itemAt(a)->widget()->setEnabled(false);
         ui->GraphLayerOperatorLayout->itemAt(a)->widget()->setStyleSheet(
-            "QPushButton {\
-                background-color: rgb(100,100,100);\
-                border: 1px solid rgb(200,200,200);\
-                padding: 10px;\
-                border-radius: 10px;\
-            }"
+            "QPushButton {"
+                "background-color: rgb(100,100,100);"
+                "border: 2px solid rgb(200,200,200);"
+                "padding: 10px;"
+                "border-radius: 10px;"
+            "}"
         );
     }
     //----圖層按鈕重設----//
 
-}
-
-
-//畫筆大小改變
-void Painter::on_PenSizeControl_valueChanged(int arg1)
-{
-    penSize=ui->PenSizeControl->value();
 }
 
 //圖層管理小圖層顯示物件被點擊
@@ -1191,93 +1195,98 @@ void Painter::on_GraphLayerDisplayerItemClicked()
             selectItemList.push(layer);
             layer->setSelectState(true);
             if(selectItemList.size()>=1){
+                setOpenModeIcon(ui->HideGraphLayer);
                 ui->HideGraphLayer->setEnabled(true);
                 ui->HideGraphLayer->setStyleSheet(
-                    "QPushButton {\
-                        background-color: rgb(35,35,35);\
-                        border: 1px solid rgb(255,255,255);\
-                        padding: 10px;\
-                        border-radius: 10px;\
-                    }"
+                    "QPushButton {"
+                        "background-color: rgb(35,35,35);"
+                        "border: 1px solid rgb(255,255,255);"
+                        "padding: 10px;"
+                        "border-radius: 10px;"
+                    "}"
 
-                    "QPushButton:hover {\
-                        background-color: rgb(55,55,55);\
-                        border: 1px solid rgb(255,255,255);\
-                    }"
+                    "QPushButton:hover {"
+                        "background-color: rgb(55,55,55);"
+                        "border: 1px solid rgb(255,255,255);"
+                    "}"
 
-                    "QPushButton:pressed {\
-                        background-color: rgb(55,55,55);\
-                        border: 1px solid rgb(200,200,200);\
-                    }"
+                    "QPushButton:pressed {"
+                        "background-color: rgb(55,55,55);"
+                        "border: 1px solid rgb(200,200,200);"
+                    "}"
                 );
+                setOpenModeIcon(ui->CopyGraphLayer);
                 ui->CopyGraphLayer->setEnabled(true);
                 ui->CopyGraphLayer->setStyleSheet(
-                    "QPushButton {\
-                        background-color: rgb(35,35,35);\
-                        border: 1px solid rgb(255,255,255);\
-                        padding: 10px;\
-                        border-radius: 10px;\
-                    }"
+                    "QPushButton {"
+                        "background-color: rgb(35,35,35);"
+                        "border: 1px solid rgb(255,255,255);"
+                        "padding: 10px;"
+                        "border-radius: 10px;"
+                    "}"
 
-                    "QPushButton:hover {\
-                        background-color: rgb(55,55,55);\
-                        border: 1px solid rgb(255,255,255);\
-                    }"
+                    "QPushButton:hover {"
+                        "background-color: rgb(55,55,55);"
+                        "border: 1px solid rgb(255,255,255);"
+                    "}"
 
-                    "QPushButton:pressed {\
-                        background-color: rgb(55,55,55);\
-                        border: 1px solid rgb(200,200,200);\
-                    }"
+                    "QPushButton:pressed {"
+                        "background-color: rgb(55,55,55);"
+                        "border: 1px solid rgb(200,200,200);"
+                    "}"
                 );
 
-
+                setOpenModeIcon(ui->DeleteGraphLayer);
                 ui->DeleteGraphLayer->setEnabled(true);
                 ui->DeleteGraphLayer->setStyleSheet(
-                    "QPushButton {\
-                        background-color: rgb(35,35,35);\
-                        border: 1px solid rgb(255,255,255);\
-                        padding: 10px;\
-                        border-radius: 10px;\
-                    }"
+                    "QPushButton {"
+                        "background-color: rgb(35,35,35);"
+                        "border: 1px solid rgb(255,255,255);"
+                        "padding: 10px;"
+                        "border-radius: 10px;"
+                    "}"
 
-                    "QPushButton:hover {\
-                        background-color: rgb(55,55,55);\
-                        border: 1px solid rgb(255,255,255);\
-                    }"
+                    "QPushButton:hover {"
+                        "background-color: rgb(55,55,55);"
+                        "border: 1px solid rgb(255,255,255);"
+                    "}"
 
-                    "QPushButton:pressed {\
-                        background-color: rgb(55,55,55);\
-                        border: 1px solid rgb(200,200,200);\
-                    }"
+                    "QPushButton:pressed {"
+                        "background-color: rgb(55,55,55);"
+                        "border: 1px solid rgb(200,200,200);"
+                    "}"
                 );
             }
             if(selectItemList.size()>=2){
+                setOpenModeIcon(ui->MergeGraphLayer);
                 ui->MergeGraphLayer->setEnabled(true);
                 ui->MergeGraphLayer->setStyleSheet(
-                    "QPushButton {\
-                        background-color: rgb(35,35,35);\
-                        border: 1px solid rgb(255,255,255);\
-                        padding: 10px;\
-                        border-radius: 10px;\
-                    }"
+                    "QPushButton {"
+                        "background-color: rgb(35,35,35);"
+                        "border: 2px solid rgb(255,255,255);"
+                        "padding: 10px;"
+                        "border-radius: 10px;"
+                    "}"
 
-                    "QPushButton:hover {\
-                        background-color: rgb(55,55,55);\
-                        border: 1px solid rgb(255,255,255);\
-                    }"
+                    "QPushButton:hover {"
+                        "background-color: rgb(55,55,55);"
+                        "border: 2px solid rgb(255,255,255);"
+                    "}"
 
-                    "QPushButton:pressed {\
-                        background-color: rgb(55,55,55);\
-                        border: 1px solid rgb(200,200,200);\
-                    }"
+                    "QPushButton:pressed {"
+                        "background-color: rgb(55,55,55);"
+                        "border: 2px solid rgb(200,200,200);"
+                    "}"
                 );
             }
         }
         layer->setStyleSheet(
-            "QLabel{\
-                border:1px solid red;\
-            }"
+            "QLabel{"
+                "border:1px solid red;"
+            "}"
         );
     }
 }
+
+
 

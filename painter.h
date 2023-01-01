@@ -21,6 +21,7 @@
 #include <QGraphicsProxyWidget>
 #include <shapepainter.h>
 #include <blurrypainter.h>
+#include <valuecontroller.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Painter; }
@@ -42,14 +43,12 @@ public:
     void UISetting();//UI介面設定
 
     QImage drawingImage();
-    void loadingPen(QPainter &painter);//讀取畫筆資料
     void Draw(QPainter* painter);//畫筆,橡皮擦
     void BucketDraw(QImage* img);//水桶
     void updatingImage(QImage img);//更新圖片
 
 private:
     enum PainterTools{DrawPen,Eraser,Bucket,DragTool,DrawShape,Blurry};//工具代號
-
 
     Ui::Painter *ui;
 
@@ -62,11 +61,9 @@ private:
     bool mouse_pressed;//滑鼠按下檢查
     bool CtrlKeyPressed;//Ctrl按鍵按下檢查
     bool LShiftKeyPressed;//LShift按鍵按下檢查
+    bool SceneHovered;//是否在繪圖區域畫面上
 
     QPointF mouse_pre,mouse_now;//滑鼠位置
-    QRgb ColorNow;//現在畫筆的顏色
-    QPen pen;//畫筆
-    int penSize;//畫筆大小
 
     ShapePainter ShapeTool;//圖形繪圖器
 
@@ -78,6 +75,8 @@ private:
     std::stack<GraphLayerDisplayerItem*> selectItemList;//以選取的圖層物件
 
     GraphLayerDisplayer *GDisplayer;//圖層UI顯示
+
+    ValueController *PainterValueController;//工具數值設定器
 
     void getMouse(QMouseEvent *event);//取得滑鼠座標
     void MousePositionOffset();//滑鼠座標偏移
@@ -129,10 +128,7 @@ private slots:
 
     void on_ColorDisplayer_clicked();//調色盤被點擊
 
-    void on_PenSizeControl_valueChanged(int arg1);//畫筆大小更新
-
     void on_GraphLayerDisplayerItemClicked();//小圖層顯示物件按下
-
 
 };
 #endif // PAINTER_H
