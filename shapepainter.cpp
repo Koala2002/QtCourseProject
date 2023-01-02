@@ -2,8 +2,7 @@
 
 ShapePainter::ShapePainter(QObject *parent)
     : QObject{parent}
-{
-    shape=Rectangle;//圖形工具預設形狀為矩形
+{  
     mode=NotLimit;
 }
 
@@ -42,7 +41,7 @@ void ShapePainter::DrawShapePosMove(QPointF Ori,QPointF Now)
     }
 }
 
-QPoint ShapePainter::DrawShapeDrawPos(QPointF Ori,QPointF Now)
+QPoint ShapePainter::getShapeDrawPos(QPointF Ori,QPointF Now)
 {
     int offset=std::abs(std::abs(Now.x()-Ori.x())-std::abs(Now.y()-Ori.y()));
     if(Now.x()-Ori.x()<0&&Now.y()-Ori.y()<0){
@@ -77,7 +76,7 @@ QPoint ShapePainter::DrawShapeDrawPos(QPointF Ori,QPointF Now)
     }
 }
 
-QSize ShapePainter::DrawShapeImageSize(QPointF Ori,QPointF Now)
+QSize ShapePainter::getShapeImageSize(QPointF Ori,QPointF Now)
 {
     if(mode==NotLimit)return QSize(std::abs(Now.x()-Ori.x()),std::abs(Now.y()-Ori.y()));
     else{
@@ -87,7 +86,7 @@ QSize ShapePainter::DrawShapeImageSize(QPointF Ori,QPointF Now)
     }
 }
 
-QImage ShapePainter::DrawShapeImage(QPointF Ori,QPointF Now)
+QImage ShapePainter::getShapeImage(QPointF Ori,QPointF Now)
 {
     if(mode==NotLimit)return QImage(std::max(1,(int)std::abs(Now.x()-Ori.x())),std::max(1,(int)std::abs(Now.y()-Ori.y())),QImage::Format_ARGB32);
     else{
@@ -97,9 +96,24 @@ QImage ShapePainter::DrawShapeImage(QPointF Ori,QPointF Now)
     }
 }
 
-void ShapePainter::setShape(ShapeTheme shapetheme)
+void ShapePainter::DrawShape(QImage &img, ShapeTheme theme,ShapeMode limit,int width,QColor color)
 {
-    shape=shapetheme;
+    QPainter painter(&img);
+
+    //如果是不是空心狀態則設置pen來畫邊，否則設置一個透明的筆畫邊
+    if(limit!=Solid)painter.setPen(QPen(color,width));
+    else painter.setPen(QPen(Qt::transparent));
+
+    img.fill(Qt::transparent);
+    if(theme==ShapePainter::Rectangle){
+        if(limit==Solid)painter.setBrush(QBrush(color));
+        painter.drawRect(0,0,img.size().width()-1,img.size().height()-1);
+
+    }
+    if(theme==ShapePainter::Circle){
+        if(limit==Solid)painter.setBrush(QBrush(color));
+        painter.drawEllipse(0,0,img.size().width()-1,img.size().height()-1);
+    }
 }
 
 void ShapePainter::setShapeMode(ShapeMode shapemode)
@@ -107,10 +121,6 @@ void ShapePainter::setShapeMode(ShapeMode shapemode)
     mode=shapemode;
 }
 
-ShapePainter::ShapeTheme ShapePainter::Shape()
-{
-    return shape;
-}
 
 ShapePainter::ShapeMode ShapePainter::Mode()
 {

@@ -74,7 +74,7 @@ GraphLayerObject::GraphLayerObject(GraphLayer *parent,QImage img)
 
     update(img);
 
-    this->setStyleSheet("background-color:rgba(0,0,0,0);border:1px solid rgba(255,255,255,100);");
+    this->setStyleSheet("background-color:rgba(0,0,0,10);");
 }
 //----GraphLayer----//
 
@@ -149,7 +149,7 @@ void GraphLayerObject::hide()
 
 void GraphLayerObject::cancelHide()
 {
-    this->setStyleSheet("background-color:rgba(0,0,0,0);border:1px solid rgba(255,255,255,100);");
+    this->setStyleSheet("background-color:rgba(255,255,255,5);");
     this->setVisible(true);
 }
 

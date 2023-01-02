@@ -135,7 +135,7 @@ void GraphLayerDisplayerItem::hideLayer()
     }
     else{
         if(getParent()->layerNow==this)this->setStyleSheet("background-color:rgba(0,0,0,0);border:1px solid rgba(255,255,255,255);");
-        else this->setStyleSheet("background-color:rgba(0,0,0,0);border:1px solid rgba(255,255,255,100);");
+        else this->setStyleSheet("background-color:rgba(0,0,0,100);border:1px solid rgba(255,255,255,100);");
 
         hiding=false;
         idx->cancelHide();

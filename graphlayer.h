@@ -57,7 +57,7 @@ class GraphLayerObject:public QLabel{
     Q_OBJECT
 public:
     enum UpdateAction{BackStep,Cancel};
-    GraphLayerObject(GraphLayer *parent=new GraphLayer(),QImage img=QImage(800,700,QImage::Format_ARGB32));
+    GraphLayerObject(GraphLayer *parent=new GraphLayer(),QImage img=QImage(1200,800,QImage::Format_ARGB32));
     ~GraphLayerObject();//刪除圖層
 
     QImage getPreImage();//取得上一次作畫圖片

@@ -12,12 +12,14 @@ SOURCES += \
     blurrypainter.cpp \
     bucketpainter.cpp \
     canvasrangeoperator.cpp \
+    drawer.cpp \
     graphlayer.cpp \
     graphlayerdisplayer.cpp \
     imagestorage.cpp \
     main.cpp \
     painter.cpp \
     painterlabel.cpp \
+    scenecleaner.cpp \
     shapepainter.cpp \
     valuecontroller.cpp
 
@@ -25,11 +27,13 @@ HEADERS += \
     blurrypainter.h \
     bucketpainter.h \
     canvasrangeoperator.h \
+    drawer.h \
     graphlayer.h \
     graphlayerdisplayer.h \
     imagestorage.h \
     painter.h \
     painterlabel.h \
+    scenecleaner.h \
     shapepainter.h \
     valuecontroller.h
 

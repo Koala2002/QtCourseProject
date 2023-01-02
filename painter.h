@@ -22,6 +22,8 @@
 #include <shapepainter.h>
 #include <blurrypainter.h>
 #include <valuecontroller.h>
+#include <drawer.h>
+#include <scenecleaner.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Painter; }
@@ -32,23 +34,22 @@ class Painter : public QMainWindow
     Q_OBJECT
 
 public:
-
+    enum PainterTools{DrawPen,Eraser,Bucket,DragTool,DrawShape,Blurry};//工具代號
     Painter(QWidget *parent = nullptr);
     ~Painter();
     void setAction();//設定動作
     void creatMenu();//設定功能表內容
-    void setColor();//設定調色盤
-    void setShape();//設定形狀選擇物件
+    void setColor();//設定調色盤  
     void setTool();//設定工具
     void UISetting();//UI介面設定
 
-    QImage drawingImage();
-    void Draw(QPainter* painter);//畫筆,橡皮擦
+    QImage BucketDrawImage();
+    //void PenDraw();
+    void Draw();//畫筆,橡皮擦
     void BucketDraw(QImage* img);//水桶
     void updatingImage(QImage img);//更新圖片
 
-private:
-    enum PainterTools{DrawPen,Eraser,Bucket,DragTool,DrawShape,Blurry};//工具代號
+private:  
 
     Ui::Painter *ui;
 
@@ -65,8 +66,9 @@ private:
 
     QPointF mouse_pre,mouse_now;//滑鼠位置
 
+    Drawer DrawTool;//繪圖工具
+    SceneCleaner CleanTool;//好啦其實就是橡皮擦ㄏㄏ
     ShapePainter ShapeTool;//圖形繪圖器
-
     BlurryPainter BlurryTool;
 
     PainterTools Ptool;//使用中的工具代號
@@ -103,7 +105,7 @@ protected:
 private slots:
 
     //----圖層功能操作----//
-    void addGraphLayer(QImage img=QImage(800,620,QImage::Format_ARGB32),QPoint pos=QPoint(0,0));//新增圖層
+    void addGraphLayer(QImage img=QImage(1000,800,QImage::Format_ARGB32),QPoint pos=QPoint(0,0));//新增圖層
     void mergeGraphLayer();//合併圖層
     void hideGraphLayer();//隱藏圖層
     void deleteGraphLayer();//刪除圖層
@@ -122,13 +124,14 @@ private slots:
 
     //----其他----//
     void ColorChange();//顏色改變
-    void ShapeChange();//形狀改變
     void ToolChange();//工具切換
     //----其他----//
 
     void on_ColorDisplayer_clicked();//調色盤被點擊
 
     void on_GraphLayerDisplayerItemClicked();//小圖層顯示物件按下
+
+    void autoScrollDown(int min,int max);
 
 };
 #endif // PAINTER_H

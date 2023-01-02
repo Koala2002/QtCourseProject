@@ -67,14 +67,10 @@ public:
     QCheckBox *PurpleColor;
     QCheckBox *BlueColor;
     QCheckBox *YellowColor;
-    QGroupBox *GraphicsBox;
-    QHBoxLayout *horizontalLayout;
-    QPushButton *Rectangle;
-    QPushButton *Circle;
     QVBoxLayout *ZoomRatioLayout;
     QLabel *ZoomRatioDisplayer;
     QGraphicsView *graphicsView;
-    QVBoxLayout *verticalLayout_3;
+    QVBoxLayout *GraphLayerDisplayerLayout;
     QScrollArea *GraphLayerDisplayerScrollArea;
     QWidget *scrollAreaWidgetContents_2;
     QVBoxLayout *GraphLayerOperatorLayout;
@@ -90,13 +86,13 @@ public:
     {
         if (Painter->objectName().isEmpty())
             Painter->setObjectName(QString::fromUtf8("Painter"));
-        Painter->resize(1150, 780);
+        Painter->resize(1290, 940);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(Painter->sizePolicy().hasHeightForWidth());
         Painter->setSizePolicy(sizePolicy);
-        Painter->setMinimumSize(QSize(1088, 750));
+        Painter->setMinimumSize(QSize(1290, 940));
         Painter->setMouseTracking(true);
         centralwidget = new QWidget(Painter);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
@@ -352,35 +348,6 @@ public:
 
         ToolLayout->addWidget(ColorBox);
 
-        GraphicsBox = new QGroupBox(PainterToolBox);
-        GraphicsBox->setObjectName(QString::fromUtf8("GraphicsBox"));
-        GraphicsBox->setMinimumSize(QSize(100, 60));
-        GraphicsBox->setMaximumSize(QSize(100, 60));
-        GraphicsBox->setAlignment(Qt::AlignCenter);
-        horizontalLayout = new QHBoxLayout(GraphicsBox);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        Rectangle = new QPushButton(GraphicsBox);
-        Rectangle->setObjectName(QString::fromUtf8("Rectangle"));
-        sizePolicy2.setHeightForWidth(Rectangle->sizePolicy().hasHeightForWidth());
-        Rectangle->setSizePolicy(sizePolicy2);
-        Rectangle->setMinimumSize(QSize(30, 30));
-        Rectangle->setMaximumSize(QSize(40, 30));
-
-        horizontalLayout->addWidget(Rectangle);
-
-        Circle = new QPushButton(GraphicsBox);
-        Circle->setObjectName(QString::fromUtf8("Circle"));
-        sizePolicy2.setHeightForWidth(Circle->sizePolicy().hasHeightForWidth());
-        Circle->setSizePolicy(sizePolicy2);
-        Circle->setMinimumSize(QSize(30, 30));
-        Circle->setMaximumSize(QSize(40, 30));
-
-        horizontalLayout->addWidget(Circle);
-
-
-        ToolLayout->addWidget(GraphicsBox);
-
 
         PainterToolBoxLayout->addLayout(ToolLayout);
 
@@ -414,14 +381,14 @@ public:
 
         WorkRegion->addWidget(graphicsView);
 
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setSpacing(10);
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        verticalLayout_3->setContentsMargins(-1, 0, -1, 5);
+        GraphLayerDisplayerLayout = new QVBoxLayout();
+        GraphLayerDisplayerLayout->setSpacing(10);
+        GraphLayerDisplayerLayout->setObjectName(QString::fromUtf8("GraphLayerDisplayerLayout"));
+        GraphLayerDisplayerLayout->setContentsMargins(-1, 0, -1, 5);
         GraphLayerDisplayerScrollArea = new QScrollArea(centralwidget);
         GraphLayerDisplayerScrollArea->setObjectName(QString::fromUtf8("GraphLayerDisplayerScrollArea"));
-        GraphLayerDisplayerScrollArea->setMinimumSize(QSize(125, 185));
-        GraphLayerDisplayerScrollArea->setMaximumSize(QSize(125, 16777215));
+        GraphLayerDisplayerScrollArea->setMinimumSize(QSize(125, 565));
+        GraphLayerDisplayerScrollArea->setMaximumSize(QSize(125, 565));
         GraphLayerDisplayerScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         GraphLayerDisplayerScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         GraphLayerDisplayerScrollArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
@@ -429,13 +396,13 @@ public:
         GraphLayerDisplayerScrollArea->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 123, 402));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 123, 563));
         GraphLayerDisplayerScrollArea->setWidget(scrollAreaWidgetContents_2);
 
-        verticalLayout_3->addWidget(GraphLayerDisplayerScrollArea);
+        GraphLayerDisplayerLayout->addWidget(GraphLayerDisplayerScrollArea);
 
         GraphLayerOperatorLayout = new QVBoxLayout();
-        GraphLayerOperatorLayout->setSpacing(7);
+        GraphLayerOperatorLayout->setSpacing(10);
         GraphLayerOperatorLayout->setObjectName(QString::fromUtf8("GraphLayerOperatorLayout"));
         GraphLayerOperatorLayout->setContentsMargins(-1, 0, -1, 0);
         AddGraphLayer = new QPushButton(centralwidget);
@@ -478,10 +445,10 @@ public:
         GraphLayerOperatorLayout->addWidget(MergeGraphLayer);
 
 
-        verticalLayout_3->addLayout(GraphLayerOperatorLayout);
+        GraphLayerDisplayerLayout->addLayout(GraphLayerOperatorLayout);
 
 
-        WorkRegion->addLayout(verticalLayout_3);
+        WorkRegion->addLayout(GraphLayerDisplayerLayout);
 
 
         verticalLayout_6->addLayout(WorkRegion);
@@ -490,7 +457,7 @@ public:
         menubar = new QMenuBar(Painter);
         menubar->setObjectName(QString::fromUtf8("menubar"));
         menubar->setEnabled(true);
-        menubar->setGeometry(QRect(0, 0, 1150, 30));
+        menubar->setGeometry(QRect(0, 0, 1290, 30));
         sizePolicy.setHeightForWidth(menubar->sizePolicy().hasHeightForWidth());
         menubar->setSizePolicy(sizePolicy);
         menubar->setMaximumSize(QSize(16777215, 16777215));
@@ -530,9 +497,6 @@ public:
         PurpleColor->setText(QString());
         BlueColor->setText(QString());
         YellowColor->setText(QString());
-        GraphicsBox->setTitle(QString());
-        Rectangle->setText(QString());
-        Circle->setText(QString());
         ZoomRatioDisplayer->setText(QCoreApplication::translate("Painter", "\347\270\256\346\224\276\345\200\215\347\216\207", nullptr));
         AddGraphLayer->setText(QString());
         HideGraphLayer->setText(QString());

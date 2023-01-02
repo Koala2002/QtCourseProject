@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Painter w;
-    w.setGeometry(QRect(400,200,1150,780));
+    w.setGeometry(QRect(300,50,1290,940));
     w.showMinimized();
     w.setMouseTracking(true);
 

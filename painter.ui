@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1150</width>
-    <height>780</height>
+    <width>1290</width>
+    <height>940</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1088</width>
-    <height>750</height>
+    <width>1290</width>
+    <height>940</height>
    </size>
   </property>
   <property name="mouseTracking">
@@ -119,7 +119,7 @@
          <item>
           <layout class="QVBoxLayout" name="PainterToolBoxLayout">
            <item>
-            <layout class="QVBoxLayout" name="ToolLayout" stretch="0,0,0,0">
+            <layout class="QVBoxLayout" name="ToolLayout" stretch="0,0,0">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -650,92 +650,6 @@
                </layout>
               </widget>
              </item>
-             <item>
-              <widget class="QGroupBox" name="GraphicsBox">
-               <property name="minimumSize">
-                <size>
-                 <width>100</width>
-                 <height>60</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>60</height>
-                </size>
-               </property>
-               <property name="title">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QPushButton" name="Rectangle">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>30</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>40</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="Circle">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>30</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>40</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
             </layout>
            </item>
            <item>
@@ -791,7 +705,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QVBoxLayout" name="GraphLayerDisplayerLayout">
         <property name="spacing">
          <number>10</number>
         </property>
@@ -806,13 +720,13 @@
           <property name="minimumSize">
            <size>
             <width>125</width>
-            <height>185</height>
+            <height>565</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>125</width>
-            <height>16777215</height>
+            <height>565</height>
            </size>
           </property>
           <property name="verticalScrollBarPolicy">
@@ -836,7 +750,7 @@
              <x>0</x>
              <y>0</y>
              <width>123</width>
-             <height>402</height>
+             <height>563</height>
             </rect>
            </property>
           </widget>
@@ -845,7 +759,7 @@
         <item>
          <layout class="QVBoxLayout" name="GraphLayerOperatorLayout">
           <property name="spacing">
-           <number>7</number>
+           <number>10</number>
           </property>
           <property name="topMargin">
            <number>0</number>
@@ -988,7 +902,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1150</width>
+     <width>1290</width>
      <height>30</height>
     </rect>
    </property>

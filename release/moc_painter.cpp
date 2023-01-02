@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Painter_t {
-    QByteArrayData data[18];
-    char stringdata0[240];
+    QByteArrayData data[20];
+    char stringdata0[251];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -46,10 +46,12 @@ QT_MOC_LITERAL(10, 103, 8), // "OpenFile"
 QT_MOC_LITERAL(11, 112, 13), // "BackToPreStep"
 QT_MOC_LITERAL(12, 126, 18), // "CancelBackToAction"
 QT_MOC_LITERAL(13, 145, 11), // "ColorChange"
-QT_MOC_LITERAL(14, 157, 11), // "ShapeChange"
-QT_MOC_LITERAL(15, 169, 10), // "ToolChange"
-QT_MOC_LITERAL(16, 180, 25), // "on_ColorDisplayer_clicked"
-QT_MOC_LITERAL(17, 206, 33) // "on_GraphLayerDisplayerItemCli..."
+QT_MOC_LITERAL(14, 157, 10), // "ToolChange"
+QT_MOC_LITERAL(15, 168, 25), // "on_ColorDisplayer_clicked"
+QT_MOC_LITERAL(16, 194, 33), // "on_GraphLayerDisplayerItemCli..."
+QT_MOC_LITERAL(17, 228, 14), // "autoScrollDown"
+QT_MOC_LITERAL(18, 243, 3), // "min"
+QT_MOC_LITERAL(19, 247, 3) // "max"
 
     },
     "Painter\0addGraphLayer\0\0img\0pos\0"
@@ -57,8 +59,9 @@ QT_MOC_LITERAL(17, 206, 33) // "on_GraphLayerDisplayerItemCli..."
     "deleteGraphLayer\0copyGraphLayer\0"
     "SaveFile\0OpenFile\0BackToPreStep\0"
     "CancelBackToAction\0ColorChange\0"
-    "ShapeChange\0ToolChange\0on_ColorDisplayer_clicked\0"
-    "on_GraphLayerDisplayerItemClicked"
+    "ToolChange\0on_ColorDisplayer_clicked\0"
+    "on_GraphLayerDisplayerItemClicked\0"
+    "autoScrollDown\0min\0max"
 };
 #undef QT_MOC_LITERAL
 
@@ -91,7 +94,7 @@ static const uint qt_meta_data_Painter[] = {
       14,    0,  112,    2, 0x08 /* Private */,
       15,    0,  113,    2, 0x08 /* Private */,
       16,    0,  114,    2, 0x08 /* Private */,
-      17,    0,  115,    2, 0x08 /* Private */,
+      17,    2,  115,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::QImage, QMetaType::QPoint,    3,    4,
@@ -109,7 +112,7 @@ static const uint qt_meta_data_Painter[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,   18,   19,
 
        0        // eod
 };
@@ -132,10 +135,10 @@ void Painter::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 9: _t->BackToPreStep(); break;
         case 10: _t->CancelBackToAction(); break;
         case 11: _t->ColorChange(); break;
-        case 12: _t->ShapeChange(); break;
-        case 13: _t->ToolChange(); break;
-        case 14: _t->on_ColorDisplayer_clicked(); break;
-        case 15: _t->on_GraphLayerDisplayerItemClicked(); break;
+        case 12: _t->ToolChange(); break;
+        case 13: _t->on_ColorDisplayer_clicked(); break;
+        case 14: _t->on_GraphLayerDisplayerItemClicked(); break;
+        case 15: _t->autoScrollDown((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         default: ;
         }
     }

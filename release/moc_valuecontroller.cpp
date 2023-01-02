@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_ValueController_t {
-    QByteArrayData data[6];
-    char stringdata0[51];
+    QByteArrayData data[8];
+    char stringdata0[82];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -36,12 +36,15 @@ QT_MOC_LITERAL(0, 0, 15), // "ValueController"
 QT_MOC_LITERAL(1, 16, 8), // "valueSet"
 QT_MOC_LITERAL(2, 25, 0), // ""
 QT_MOC_LITERAL(3, 26, 5), // "value"
-QT_MOC_LITERAL(4, 32, 13), // "PenModeChange"
-QT_MOC_LITERAL(5, 46, 4) // "mode"
+QT_MOC_LITERAL(4, 32, 11), // "shapeChange"
+QT_MOC_LITERAL(5, 44, 9), // "shapeMode"
+QT_MOC_LITERAL(6, 54, 16), // "shapeLimitChange"
+QT_MOC_LITERAL(7, 71, 10) // "shapeLimit"
 
     },
     "ValueController\0valueSet\0\0value\0"
-    "PenModeChange\0mode"
+    "shapeChange\0shapeMode\0shapeLimitChange\0"
+    "shapeLimit"
 };
 #undef QT_MOC_LITERAL
 
@@ -51,7 +54,7 @@ static const uint qt_meta_data_ValueController[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -59,12 +62,14 @@ static const uint qt_meta_data_ValueController[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   24,    2, 0x08 /* Private */,
-       4,    1,   27,    2, 0x08 /* Private */,
+       1,    1,   29,    2, 0x08 /* Private */,
+       4,    1,   32,    2, 0x08 /* Private */,
+       6,    1,   35,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    3,
     QMetaType::Void, QMetaType::Int,    5,
+    QMetaType::Void, QMetaType::Int,    7,
 
        0        // eod
 };
@@ -76,7 +81,8 @@ void ValueController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->valueSet((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 1: _t->PenModeChange((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->shapeChange((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 2: _t->shapeLimitChange((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -111,13 +117,13 @@ int ValueController::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }
