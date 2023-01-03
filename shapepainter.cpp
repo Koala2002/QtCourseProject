@@ -1,4 +1,6 @@
 #include "shapepainter.h"
+#include <QDebug>
+
 
 ShapePainter::ShapePainter(QObject *parent)
     : QObject{parent}
@@ -100,7 +102,7 @@ void ShapePainter::DrawShape(QImage &img, ShapeTheme theme,ShapeMode limit,int w
 {
     QPainter painter(&img);
 
-    //如果是不是空心狀態則設置pen來畫邊，否則設置一個透明的筆畫邊
+    //如果是空心狀態則設置pen來畫邊，否則設置一個透明的筆畫邊
     if(limit!=Solid)painter.setPen(QPen(color,width));
     else painter.setPen(QPen(Qt::transparent));
 
@@ -111,7 +113,17 @@ void ShapePainter::DrawShape(QImage &img, ShapeTheme theme,ShapeMode limit,int w
 
     }
     if(theme==ShapePainter::Circle){
-        if(limit==Solid)painter.setBrush(QBrush(color));
+        if(limit==Solid)painter.setBrush(QBrush(color));        
+        if(limit==Hollow){
+            if(img.width()<=width*2||img.height()<=width*2){
+                painter.setBrush(QBrush(color));
+                painter.setPen(QPen(Qt::transparent,0));
+                painter.drawEllipse(width/2/img.width(),width/2/img.height(),img.width(),img.height());
+            }
+            else painter.drawEllipse(width/2,width/2,img.width()-width-1,img.height()-width-1);
+            return;
+        }
+        qDebug()<<img.size();
         painter.drawEllipse(0,0,img.size().width()-1,img.size().height()-1);
     }
 }

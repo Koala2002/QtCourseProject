@@ -1264,6 +1264,3 @@ void Painter::autoScrollDown(int min, int max)
     QScrollBar *bar = ui->GraphLayerDisplayerScrollArea->verticalScrollBar();
     bar->setValue(max);
 }
-
-
-

@@ -18,12 +18,14 @@ GraphLayerDisplayerItem::GraphLayerDisplayerItem(GraphLayerDisplayer *parent,Gra
     objectVLayout->setSpacing(5);
 
     layerText=new QLabel();
-    layer->resize(50,20);
-
-    layerText->setText(QString("圖層")+QString::number(layerNumber+1));
+    layerText->setFont(QFont("標楷",11,QFont::Bold));
+    layerText->setText(QString("圖層")+QString::number(layerNumber+1));    
 
     layerText->setStyleSheet(
-        "background-color:rgb(255,255,255);"
+        "max-height:22px;"
+        "min-height:22px;"
+        "background-color:rgb(225,225,225);"
+        "border-radius:5px;"
         "qproperty-alignment: AlignCenter;"
     );
 
