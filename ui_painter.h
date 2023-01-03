@@ -387,8 +387,8 @@ public:
         GraphLayerDisplayerLayout->setContentsMargins(-1, 0, -1, 5);
         GraphLayerDisplayerScrollArea = new QScrollArea(centralwidget);
         GraphLayerDisplayerScrollArea->setObjectName(QString::fromUtf8("GraphLayerDisplayerScrollArea"));
-        GraphLayerDisplayerScrollArea->setMinimumSize(QSize(125, 565));
-        GraphLayerDisplayerScrollArea->setMaximumSize(QSize(125, 565));
+        GraphLayerDisplayerScrollArea->setMinimumSize(QSize(125, 592));
+        GraphLayerDisplayerScrollArea->setMaximumSize(QSize(125, 592));
         GraphLayerDisplayerScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         GraphLayerDisplayerScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         GraphLayerDisplayerScrollArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
@@ -396,7 +396,7 @@ public:
         GraphLayerDisplayerScrollArea->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 123, 563));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 123, 590));
         GraphLayerDisplayerScrollArea->setWidget(scrollAreaWidgetContents_2);
 
         GraphLayerDisplayerLayout->addWidget(GraphLayerDisplayerScrollArea);

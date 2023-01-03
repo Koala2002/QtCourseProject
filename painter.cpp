@@ -299,6 +299,7 @@ void Painter::UISetting(){
 
     //----縮放倍率顯示器UI初始化設定----//
     ui->ZoomRatioLayout->setAlignment(Qt::AlignBottom);
+    ui->ZoomRatioDisplayer->setFont(QFont("標楷",10,QFont::Bold));
     ui->ZoomRatioDisplayer->setText(QString::number(std::round(zoomRatio*10000)/100)+QString("%"));
     ui->ZoomRatioDisplayer->setStyleSheet(
         "background-color:rgba(255,255,255,200);"
@@ -306,6 +307,104 @@ void Painter::UISetting(){
     );
     //----縮放倍率顯示器UI設定----//
     ui->GraphLayerDisplayerLayout->setAlignment(Qt::AlignTop);
+
+
+    //----graphicView scrollBarUI設計----//
+    ui->graphicsView->verticalScrollBar()->setStyleSheet(
+        "QScrollBar:vertical {"
+        "   border: none;"
+        "   background: rgb(65, 65, 65);"
+        "   width: 14px;"
+        "   border-radius: 0px;"
+        "}"
+
+        "QScrollBar::handle:vertical {"
+        "    background-color: rgb(50, 90, 140);"
+        "    min-height: 30px;"
+        "    border-radius: 7px;"
+        "}"
+
+        "QScrollBar::handle:vertical:hover {"
+        "    background-color: rgb(100, 140, 190);"
+        "}"
+
+        "QScrollBar::handle:vertical:pressed {"
+        "    background-color: rgb(75, 115, 165);"
+        "}"
+
+        "QScrollBar::sub-line:vertical {"
+        "   border: none;"
+        "   background-color: transparent;"
+        "   height: 0px;"
+        "   subcontrol-position: top;"
+        "   subcontrol-origin: margin;"
+        "}"
+
+        "QScrollBar::add-line:vertical {"
+        "   border: none;"
+        "   background-color: transparent;"
+        "   height: 0px;"
+        "   subcontrol-position: bottom;"
+        "   subcontrol-origin: margin;"
+        "}"
+
+        "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {"
+        "   background: none;"
+        "}"
+
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"
+        "   background: none;"
+    "   }"
+    );
+
+    ui->graphicsView->horizontalScrollBar()->setStyleSheet(
+        "QScrollBar:horizontal {"
+        "   border: none;"
+        "   background: rgb(65, 65, 65);"
+        "   height: 14px;"
+        "   border-radius: 0px;"
+        "}"
+
+        "QScrollBar::handle:horizontal {"
+        "    background-color: rgb(50, 90, 140);"
+        "    min-width: 30px;"
+        "    border-radius: 7px;"
+        "}"
+
+        "QScrollBar::handle:horizontal:hover {"
+        "    background-color: rgb(100, 140, 190);"
+        "}"
+
+        "QScrollBar::handle:horizontal:pressed {"
+        "    background-color: rgb(75, 115, 165);"
+        "}"
+
+        "QScrollBar::sub-line:horizontal {"
+        "   border: none;"
+        "   background-color: transparent;"
+        "   width: 0px;"
+        "   subcontrol-position: top;"
+        "   subcontrol-origin: margin;"
+        "}"
+
+        "QScrollBar::add-line:horizontal {"
+        "   border: none;"
+        "   background-color: transparent;"
+        "   width: 0px;"
+        "   subcontrol-position: bottom;"
+        "   subcontrol-origin: margin;"
+        "}"
+
+        "QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal {"
+        "   background: none;"
+        "}"
+
+        "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {"
+        "   background: none;"
+        "}"
+
+    );
+    //----graphicView scrollBarUI設計----//
 }
 
 //顏色改變
@@ -415,7 +514,6 @@ void Painter::setOpenModeIcon(QWidget *obj)
 //事件過濾器，用於過濾graphicView抓取到的事件
 bool Painter::eventFilter(QObject *obj, QEvent *event)
 {   
-
     if(event->type()==QHoverEvent::Enter){
         SceneHovered=true;
         setToolCursor(Ptool);
@@ -454,8 +552,9 @@ bool Painter::eventFilter(QObject *obj, QEvent *event)
 
 //滑鼠按下
 void Painter::mousePressEvent(QMouseEvent *event)
-{
-
+{   
+    if(mouse_pressed==true)return;
+    if(event->button()!=Qt::LeftButton)return;
     if(Ptool==DragTool&&SceneHovered==true)setCursor(QCursor(Qt::ClosedHandCursor));
     else if(SceneHovered==false)setCursor(QCursor(Qt::ArrowCursor));
 
@@ -463,7 +562,7 @@ void Painter::mousePressEvent(QMouseEvent *event)
     if(CtrlKeyPressed==true)return;
     mouse_pressed=true;
 
-    if(event->buttons()!=Qt::LeftButton)return;
+
     if(GLayer->Top()==NULL)return;
     getMouse(event);//取得滑鼠座標
 
@@ -484,11 +583,16 @@ void Painter::mousePressEvent(QMouseEvent *event)
 
     if(Ptool==DrawPen){//繪圖工具使用
         MousePositionOffset();        
-        DrawTool.DrawInit(mouse_now.toPoint(),GLayer->Top()->pos(),GLayer->Top()->size());
+        PainterValueController->loadTool(ValueController::PenValue);//讀取畫筆資料
+        DrawTool.DrawInit(
+            mouse_now.toPoint(),
+            GLayer->Top()->pos(),
+            GLayer->Top()->size(),
+            PainterValueController->getPen()
+        );
 
-        PainterValueController->loadTool((Ptool==DrawPen)?ValueController::PenValue:ValueController::EraserValue);//讀取畫筆資料
 
-        if(Ptool==DrawPen)DrawTool.Draw(mouse_now.toPoint(),PainterValueController->getPen());
+        //DrawTool.Draw(mouse_now.toPoint(),PainterValueController->getPen());
 
         GLayer->GraphLayerScene()->addWidget(DrawTool.getDrawLabel())->setZValue(100000);
     }
@@ -499,6 +603,7 @@ void Painter::mousePressEvent(QMouseEvent *event)
         updatingImage(newImg);
     }
     if(Ptool==Bucket){
+        MousePositionOffset();
         QImage newImage(BucketDrawImage());//畫新圖
         updatingImage(newImage);//更新畫布
     }
@@ -542,14 +647,15 @@ void Painter::mousePressEvent(QMouseEvent *event)
 }
 
 //滑鼠放開
-void Painter::mouseReleaseEvent(QMouseEvent *event){
+void Painter::mouseReleaseEvent(QMouseEvent *event){   
+    if(event->button()!=Qt::LeftButton)return;
+
     if(Ptool==DragTool&&SceneHovered==true)setCursor(QCursor(Qt::OpenHandCursor));
     else if(Ptool==DragTool)setCursor(QCursor(Qt::ArrowCursor));
 
-    if(CtrlKeyPressed==true)return;
     mouse_pressed=false;
     if(GLayer->Top()==NULL)return;
-    if(mouse_pre==QPointF(-1,-1)&&!(Ptool==DrawPen||Ptool==Eraser)){
+    if(mouse_pre==QPointF(-1,-1)&&Ptool!=DrawPen){
         if(GLayer->Top()->pixmap(Qt::ReturnByValue).toImage()!=GLayer->Top()->getPreImage())
             GLayer->Top()->update(GLayer->Top()->pixmap(Qt::ReturnByValue).toImage());
         return;
@@ -616,7 +722,7 @@ void Painter::mouseMoveEvent(QMouseEvent *event){
     if(mouse_pressed==false)return;
 
     if(Ptool==Bucket)return;
-    if(event->buttons()!=Qt::LeftButton)return;
+
     if(GLayer->Top()==NULL)return;
 
     getMouse(event);//取得滑鼠座標
@@ -727,7 +833,7 @@ void Painter::wheelEvent(QWheelEvent *event)
 void Painter::keyPressEvent(QKeyEvent *event)
 {
     if(event->key()==Qt::Key_Control){
-        if(mouse_pressed==true&&Ptool==DrawShape)return;
+        if(mouse_pressed==true&&mouse_pressed==true)return;
         CtrlKeyPressed=true;
         mouse_pre=QPointF(-1,-1);
 

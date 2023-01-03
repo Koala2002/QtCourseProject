@@ -18,7 +18,7 @@ QColor BlurryPainter::Blur(QImage img, QPoint Ori,int weight)
 
     for(flowDir DIR=UP;DIR<=RIGHT;DIR=flowDir(DIR+1)){
         for(int dis=1;dis<=weight;dis++){
-            QPoint flowPoint=Ori+FlowPos(DIR);
+            QPoint flowPoint=Ori+FlowPos(DIR)*dis;
             if(CanFlow(flowPoint,img.size())==true){
                 newColor[0]+=img.pixelColor(flowPoint).red()*std::max(1,(int)(weight/dis));
                 newColor[1]+=img.pixelColor(flowPoint).green()*std::max(1,(int)(weight/dis));

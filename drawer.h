@@ -16,7 +16,7 @@ public:
 
     void Draw(QPoint pos,QPen pen);
 
-    void DrawInit(QPoint MousePos,QPoint LabelPos,QSize LabelSize);
+    void DrawInit(QPoint MousePos,QPoint LabelPos,QSize LabelSize,QPen pen);
 
     void DrawComplete();
 

@@ -549,7 +549,7 @@ void ValueController::UISetting()
             "}"
 
             "QSlider::handle:horizontal:hover {"
-                "background-color: rgb(90,130,180);"
+                "background-color: rgb(100,140,190);"
                 "height: 8px;"
                 "width: 8px;"
                 "margin: -4px;"
@@ -558,7 +558,7 @@ void ValueController::UISetting()
             "}"
 
             "QSlider::handle:horizontal:pressed {"
-                "background-color: rgb(70,110,160);"
+                "background-color: rgb(75,115,165);"
                 "height: 8px;"
                 "width: 8px;"
                 "margin: -4px;"
