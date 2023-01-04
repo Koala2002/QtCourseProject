@@ -106,7 +106,7 @@ void Painter::setColor(){
     );
     connect(ui->BlueColor,SIGNAL(clicked(bool)),this,SLOT(ColorChange()));
 
-    //我也不知道快捷色塊
+    //紫色快捷色塊
     ui->PurpleColor->setStyleSheet(
         "QCheckBox::indicator::unchecked { background-color : rgb(255,0,255); width : 20px; height : 20px; }"
     );

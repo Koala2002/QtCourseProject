@@ -77,7 +77,7 @@ void ValueController::loadTool(ToolCode code)
 {
     if(code==PenValue){
         ColorNow.setAlpha(penTransParentValue);
-        DrawPen.setColor(penTransParentValue==0?QColor(0,0,0,0):ColorNow);
+        DrawPen.setColor(penTransParentValue==0?Qt::transparent:ColorNow);
         DrawPen.setWidth(penSize);
     }
     if(code==EraserValue){
