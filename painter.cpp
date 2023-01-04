@@ -596,17 +596,20 @@ void Painter::mousePressEvent(QMouseEvent *event)
 
         GLayer->GraphLayerScene()->addWidget(DrawTool.getDrawLabel())->setZValue(100000);
     }
+
     if(Ptool==Eraser){
         MousePositionOffset();
         PainterValueController->loadTool(ValueController::EraserValue);
         QImage newImg=CleanTool.erased(mouse_now.toPoint(),GLayer->Top()->pixmap(Qt::ReturnByValue).toImage(),PainterValueController->getPen());
         updatingImage(newImg);
     }
+
     if(Ptool==Bucket){
         MousePositionOffset();
         QImage newImage(BucketDrawImage());//畫新圖
         updatingImage(newImage);//更新畫布
     }
+
     if(Ptool==DragTool){//選取工具使用
         if(mouse_pre==QPointF(-1,-1))mouse_pre=mouse_now;
         GLayer->Top()->move(GLayer->Top()->pos()+(mouse_now-mouse_pre).toPoint());
@@ -643,6 +646,7 @@ void Painter::mousePressEvent(QMouseEvent *event)
         );
         updatingImage(newImg);
     }
+
     mouse_pre=mouse_now;
 }
 
@@ -811,6 +815,7 @@ void Painter::mouseMoveEvent(QMouseEvent *event){
 
 }
 
+//滑鼠滾輪滾動
 void Painter::wheelEvent(QWheelEvent *event)
 {
     if(CtrlKeyPressed==false)return;
@@ -830,6 +835,7 @@ void Painter::wheelEvent(QWheelEvent *event)
     }
 }
 
+//鍵盤按下
 void Painter::keyPressEvent(QKeyEvent *event)
 {
     if(event->key()==Qt::Key_Control){
@@ -876,6 +882,7 @@ void Painter::keyPressEvent(QKeyEvent *event)
     }
 }
 
+//鍵盤放開
 void Painter::keyReleaseEvent(QKeyEvent *event)
 {
     if(event->key()==Qt::Key_Control){
@@ -1051,7 +1058,7 @@ void Painter::MousePositionOffset(){
     //----座標偏移----//
 }
 
-//畫圖
+//水桶畫圖
 QImage Painter::BucketDrawImage(){
 
     QPixmap pic=GLayer->Top()->pixmap(Qt::ReturnByValue);//抓取圖片
@@ -1059,7 +1066,6 @@ QImage Painter::BucketDrawImage(){
 
     BucketDraw(&sourceImage);
     return sourceImage;
-
 }
 
 //使用水桶作畫
@@ -1364,6 +1370,7 @@ void Painter::on_GraphLayerDisplayerItemClicked()
     }
 }
 
+//小圖層顯示器新增圖層時ScrollBar自動向下
 void Painter::autoScrollDown(int min, int max)
 {
     Q_UNUSED(min);

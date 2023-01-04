@@ -48,7 +48,7 @@ QPen ValueController::getPen()
     return DrawPen;
 }
 
-
+//回傳目前使用顏色
 QColor ValueController::getColor(ToolCode code)
 {
     QColor returnColor=ColorNow;
@@ -58,39 +58,54 @@ QColor ValueController::getColor(ToolCode code)
     return returnColor;
 }
 
+//回傳模糊權重
 int ValueController::getBlurryWeight()
 {
+
     return blurryWeight;
 }
 
+//回傳圖形邊寬
 int ValueController::getShapeWidth()
 {
     return shapeWidth;
 }
 
+//設定使用顏色
 void ValueController::setColor(QColor rgba)
 {
     ColorNow=rgba;
 }
 
+//讀取工具資料
 void ValueController::loadTool(ToolCode code)
 {
+    //讀取畫筆資料
     if(code==PenValue){
         ColorNow.setAlpha(penTransParentValue);
         DrawPen.setColor(penTransParentValue==0?Qt::transparent:ColorNow);
         DrawPen.setWidth(penSize);
     }
+
+    //讀取橡皮擦資料
     if(code==EraserValue){
         DrawPen.setColor(Qt::transparent);
         DrawPen.setWidth(eraserSize);
     }
+
+    //讀取模糊工具資料
     if(code==BlurryValue){
         DrawPen.setWidth(blurrySize);
     }
+
+    //讀取水桶資料
     if(code==BucketValue)ColorNow.setAlpha(bucketTransParentValue);
+
+    //讀取圖形工具資料
     if(code==ShapeValue)ColorNow.setAlpha(shapeTransParentValue);
 }
 
+//設定目前使用工具列數值設定頁面
 void ValueController::setPage(PageCode code)
 {
     if(code==PenPage)widget->setCurrentIndex(0);
@@ -101,16 +116,19 @@ void ValueController::setPage(PageCode code)
     if(code==ShapePage)widget->setCurrentIndex(5);
 }
 
+//回傳現在使用圖形
 ShapePainter::ShapeTheme ValueController::ShapeNow()
 {
     return shape;
 }
 
+//回傳圖形限制(空心或實心)
 ShapePainter::ShapeMode ValueController::ShapeLimit()
 {
     return shapeLimit;
 }
 
+//反正就是各種控制物件初始化
 void ValueController::ControllerInit()
 {
     QSlider** slider1[]{
@@ -119,6 +137,8 @@ void ValueController::ControllerInit()
         &blurrySizeControl,
         &shapeWidthControl
     };
+
+    //設定用於控制邊寬類型的slider UI大小與數值範圍
     for(auto &WidthSlider:slider1){
         *WidthSlider=new QSlider(Qt::Horizontal);
         (*WidthSlider)->setMinimumSize(200,10);
@@ -133,6 +153,8 @@ void ValueController::ControllerInit()
         &bucketTransParentControl,
         &shapeTransParentControl,
     };
+
+    //設定用於控制透明度的slider UI大小與數值範圍
     for(auto &TransParentSlider:slider2){
         *TransParentSlider=new QSlider(Qt::Horizontal);
         (*TransParentSlider)->setMinimumSize(200,10);
@@ -151,6 +173,7 @@ void ValueController::ControllerInit()
 
 }
 
+//每個工具的控制頁面UI設定
 void ValueController::ControllerGroupBoxInit()
 {
 
@@ -246,6 +269,7 @@ void ValueController::ControllerGroupBoxInit()
 
 }
 
+//工具數值控制區域UI設定
 void ValueController::UISetting()
 {
     //----畫筆控制項UI設定----//
@@ -269,9 +293,8 @@ void ValueController::UISetting()
     );
     PenSizeName2->setMinimumSize(170,30);
     PenSizeName2->setMaximumSize(170,30);
-
-
     //----畫筆控制項UI設定----//
+
 
     //----橡皮擦控制項UI設定----//
     EraserSizeName1=new QLabel("尺寸：10 px");
@@ -284,6 +307,7 @@ void ValueController::UISetting()
     EraserSizeName1->setMinimumSize(107,30);
     EraserSizeName1->setMaximumSize(107,30);
     //----橡皮擦控制項UI設定----//
+
 
     //----模糊工具控制項-UI設定---//
     BlurrySizeName=new QLabel("尺寸：10 px");
@@ -307,6 +331,7 @@ void ValueController::UISetting()
     BlurryWeightName->setMaximumSize(90,30);
     //----模糊工具控制項UI設定----//
 
+
     //----水桶控制項UI設定----//
     BucketTransParentName=new QLabel("不透明度：100.00 %");
     BucketTransParentName->setFont(QFont("標楷",10,  QFont::Bold));
@@ -318,6 +343,7 @@ void ValueController::UISetting()
     BucketTransParentName->setMinimumSize(170,30);
     BucketTransParentName->setMaximumSize(170,30);
     //----水桶控制項UI設定----//
+
 
     //----圖形工具控制項UI設定----//
     ShapeName=new QLabel("形狀：矩形");
@@ -503,9 +529,8 @@ void ValueController::UISetting()
     );
     ShapeTransParentName->setMinimumSize(170,30);
     ShapeTransParentName->setMaximumSize(170,30);
-
-
     //----圖形工具控制項UI設定----//
+
 
     //----Slider物件UI設定----//
     QSlider** sliders[]={
@@ -567,8 +592,10 @@ void ValueController::UISetting()
             "}"
         );
     }
+    //----Slider物件UI設定----//
 }
 
+//slider控制物件信號槽連結
 void ValueController::SliderConnectInit()
 {
     connect(penSizeControl,SIGNAL(valueChanged(int)),this,SLOT(valueSet(int)));
@@ -581,6 +608,7 @@ void ValueController::SliderConnectInit()
     connect(shapeWidthControl,SIGNAL(valueChanged(int)),this,SLOT(valueSet(int)));
 }
 
+//slider信號槽觸發slot函式
 void ValueController::valueSet(int value)
 {
     QSlider *slider=qobject_cast<QSlider*>(sender());
@@ -619,6 +647,7 @@ void ValueController::valueSet(int value)
     }
 }
 
+//使用圖形更改
 void ValueController::shapeChange(int shapeMode)
 {
     if(shapeMode==0){
@@ -631,6 +660,7 @@ void ValueController::shapeChange(int shapeMode)
     }
 }
 
+//使用圖形限制更改(實心或空心)
 void ValueController::shapeLimitChange(int limit)
 {
     if(limit==0){

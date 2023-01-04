@@ -31,6 +31,7 @@ class ImageStorage : public QObject
     Q_OBJECT
 public:
     explicit ImageStorage(QObject *parent = nullptr);
+    ~ImageStorage();
 
     void push(QImage img);
     QImage front() const;

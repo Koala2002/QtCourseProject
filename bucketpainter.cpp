@@ -7,7 +7,7 @@ BucketPainter::BucketPainter(QImage *image,QColor c,QObject *parent)
     bucketColor=c;
 }
 
-//顏色擴散(BFS)
+//顏色擴散
 void BucketPainter::ColorDiffuse(QPoint p)
 {
     Colored=std::vector<std::vector<bool>>(img->height(),std::vector<bool>(img->width(),false));
@@ -53,6 +53,7 @@ bool BucketPainter::CanFlow(QPoint p)
     else return true;
 }
 
+//確認是否能使用座標p進行運算(用於模糊工具)
 bool BucketPainter::CanFlow(QPoint p, QSize range)
 {
     if(p.x()>=range.width()||p.y()>=range.height())return false;

@@ -5,8 +5,13 @@ BlurryPainter::BlurryPainter(QObject *parent)
 
 }
 
+//模糊這個點
 QColor BlurryPainter::Blur(QImage img, QPoint Ori,int weight)
 {
+    /*
+        模糊演算法使用的是高斯模糊
+        為了加快使用效率採用的不是，取用模糊點權重大小距離方格內
+    */
     int newColor[4]={0};//新的rgba數值
     int totalWeightCount=weight;
 
@@ -33,6 +38,7 @@ QColor BlurryPainter::Blur(QImage img, QPoint Ori,int weight)
     return QColor(newColor[0],newColor[1],newColor[2],newColor[3]);
 }
 
+//兩點距離
 double BlurryPainter::PointDis(QPoint p1, QPoint p2)
 {
     int xDis=p1.x()-p2.x();
@@ -41,6 +47,7 @@ double BlurryPainter::PointDis(QPoint p1, QPoint p2)
     return std::sqrt(xDis*xDis+yDis*yDis);
 }
 
+//模糊區塊運算
 QImage BlurryPainter::Blurrying(QImage img, QPoint Ori, int penSize,int weight)
 {
     if(Ori.x()<0||Ori.y()<0||Ori.x()>=img.size().width()||Ori.y()>=img.size().height())return img;

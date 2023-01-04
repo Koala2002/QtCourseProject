@@ -77,11 +77,6 @@ private:
     QAction *deleteAction;//刪除功能
     QAction *hideLayerAction;//隱藏功能
 
-    //QToolButton *toolButton;//選項按鈕
-    QMenu *toolMenu;//選項清單
-
-    void setToolButton();//選項內容設定        
-
     bool hiding;//隱藏狀態
     bool selecting;//選取狀態(合併圖層用)
 

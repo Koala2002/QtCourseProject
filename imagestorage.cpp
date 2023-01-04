@@ -9,6 +9,13 @@ ImageStorage::ImageStorage(QObject *parent)
     CancelBox=NULL;
 }
 
+ImageStorage::~ImageStorage()
+{
+    while(storageSize>0){
+        this->pop_back();
+    }
+}
+
 void ImageStorage::push(QImage img)
 {
     ImageNode *newnode=new ImageNode(img);

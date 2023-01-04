@@ -29,8 +29,6 @@ GraphLayerDisplayerItem::GraphLayerDisplayerItem(GraphLayerDisplayer *parent,Gra
         "qproperty-alignment: AlignCenter;"
     );
 
-    setToolButton();//選項內容設定
-
     QGridLayout *objectHLayout=new QGridLayout();
 
     objectHLayout->addWidget(layerText,0,0);
@@ -41,9 +39,7 @@ GraphLayerDisplayerItem::GraphLayerDisplayerItem(GraphLayerDisplayer *parent,Gra
 }
 
 GraphLayerDisplayerItem::~GraphLayerDisplayerItem(){
-    delete objectVLayout;//刪除物件排版整合
-    //delete toolButton;//刪除選項按鈕
-    delete toolMenu;//刪除選項清單
+    delete objectVLayout;//刪除物件排版整合        
 }
 
 QGraphicsProxyWidget *GraphLayerDisplayerItem::getWidgetIdx()
@@ -63,20 +59,6 @@ GraphLayerDisplayer *GraphLayerDisplayerItem::getParent()
 QVBoxLayout *GraphLayerDisplayerItem::ObjectLayout()
 {
     return objectVLayout;
-}
-
-void GraphLayerDisplayerItem::setToolButton()
-{
-   // toolButton= new QToolButton();
-
-    toolMenu = new QMenu();
-    toolMenu->setMinimumSize(100,50);
-    toolMenu->setMaximumSize(100,50);
-    toolMenu->setStyleSheet(
-        "QMenu::item{background-color:rgba(0,0,0,0);color:rgb(0,0,0)}"
-        "QMenu::item:selected{background-color:rgba(100,100,120,100);color:rgb(0,0,0)}"
-    );
-
 }
 
 bool GraphLayerDisplayerItem::isHide()

@@ -8,6 +8,7 @@ CanvasRangeOperator::CanvasRangeOperator()
     yEnd=NULL;
 }
 
+//取得畫面範圍
 QSize CanvasRangeOperator::MaxRange()
 {
     if(xFirst==NULL||yFirst==NULL)return QSize(0,0);
@@ -194,12 +195,13 @@ void CanvasRangeOperator::deleteRange(GraphLayerObject *nodeData)
     }
 }
 
-
+//取的橫軸長度
 int CanvasRangeOperator::getXRange(RangeNode *node)
 {
     return node->obj->width()+node->obj->x();
 }
 
+//取得縱軸長度
 int CanvasRangeOperator::getYRange(RangeNode *node)
 {
     return node->obj->height()+node->obj->y();
