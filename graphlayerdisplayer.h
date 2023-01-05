@@ -2,6 +2,7 @@
 #define GRAPHLAYERDISPLAYER_H
 
 #include <QLabel>
+#include <QObject>
 #include <QToolButton>
 #include <QPushButton>
 #include <QAction>
@@ -14,7 +15,7 @@
 
 class GraphLayerDisplayerItem;
 
-class GraphLayerDisplayer : public QWidget
+class GraphLayerDisplayer : public QObject
 {
     friend class GraphLayerDisplayerItem;
     Q_OBJECT

@@ -68,6 +68,7 @@ private:
 
     Drawer DrawTool;//繪圖工具
     SceneCleaner CleanTool;//好啦其實就是橡皮擦ㄏㄏ
+    BucketPainter BucketTool;//水桶工具
     ShapePainter ShapeTool;//圖形繪圖器
     BlurryPainter BlurryTool;
 

@@ -2,6 +2,7 @@
 #define GRAPHLAYER_H
 
 #include <QWidget>
+#include <QObject>
 #include <QGridLayout>
 #include <vector>
 #include <queue>
@@ -12,7 +13,7 @@
 class GraphLayerObject;
 class CanvasRangeOperator;
 
-class GraphLayer : public QWidget
+class GraphLayer : public QObject
 {
     friend class GraphLayerObject;
     friend class CanvasRangeOperator;

@@ -567,15 +567,15 @@ void Painter::mousePressEvent(QMouseEvent *event)
     getMouse(event);//取得滑鼠座標
 
     //超出範圍
-    if(mouse_now.x()<GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()*zoomRatio||
-            mouse_now.y()<GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()*zoomRatio){
+    if(mouse_now.x()<GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio||
+            mouse_now.y()<GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio){
 
         mouse_pressed=false;
         return;
     }
     //超出範圍
-    if(mouse_now.x()>=GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()*zoomRatio||
-            mouse_now.y()>=GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()*zoomRatio){
+    if(mouse_now.x()>=GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio||
+            mouse_now.y()>=GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio){
 
         mouse_pressed=false;
         return;
@@ -591,9 +591,6 @@ void Painter::mousePressEvent(QMouseEvent *event)
             PainterValueController->getPen()
         );
 
-
-        //DrawTool.Draw(mouse_now.toPoint(),PainterValueController->getPen());
-
         GLayer->GraphLayerScene()->addWidget(DrawTool.getDrawLabel())->setZValue(100000);
     }
 
@@ -605,9 +602,16 @@ void Painter::mousePressEvent(QMouseEvent *event)
     }
 
     if(Ptool==Bucket){
-        MousePositionOffset();
-        QImage newImage(BucketDrawImage());//畫新圖
-        updatingImage(newImage);//更新畫布
+        MousePositionOffset();      
+        QImage newImg=GLayer->Top()->pixmap(Qt::ReturnByValue).toImage();
+        PainterValueController->loadTool(ValueController::BucketValue);
+        BucketTool.BucketInit(
+            newImg,
+            PainterValueController->getColor(ValueController::BucketValue),
+            PainterValueController->getBucketColorToleranceValue()
+        );
+        BucketTool.ColorDiffuse(mouse_now.toPoint());
+        updatingImage(newImg);//更新畫布
     }
 
     if(Ptool==DragTool){//選取工具使用
@@ -670,9 +674,35 @@ void Painter::mouseReleaseEvent(QMouseEvent *event){
         //----圖形工具繪圖合併----//
         QImage newImg(GLayer->Top()->size(),QImage::Format_ARGB32_Premultiplied);
         QPainter  painter(&newImg);
+        painter.setRenderHint(QPainter::Antialiasing, true);
         painter.drawImage(0,0,GLayer->Top()->pixmap(Qt::ReturnByValue).toImage());
 
         getMouse(event);
+
+        //超出圖層範圍則更改mouse_now的數值
+        if(mouse_now.x()<GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio||
+                mouse_now.y()<GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio){
+
+            mouse_now=QPoint(
+                std::max(mouse_now.x(),GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio),
+                std::max(mouse_now.y(),GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio)
+            );
+            qDebug()<<"bb";
+        }
+        //超出圖層範圍則更改mouse_now的數值
+        if(mouse_now.x()>=GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio||
+                mouse_now.y()>=GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio){
+
+            qDebug()<<mouse_now;
+            qDebug()<<QPoint(GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio,
+                             GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio);
+            mouse_now=QPoint(
+                std::min(mouse_now.x(),GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio),
+                std::min(mouse_now.y(),GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio)
+            );
+            qDebug()<<"aa";
+        }
+
         MousePositionOffset();
         ShapeTool.DrawShapePosMove(mouse_pre,mouse_now);
 
@@ -699,6 +729,7 @@ void Painter::mouseReleaseEvent(QMouseEvent *event){
         //圖片合併
         QImage newImg(GLayer->Top()->size(),QImage::Format_ARGB32_Premultiplied);
         QPainter  painter(&newImg);
+        painter.setRenderHint(QPainter::Antialiasing, true);
         painter.drawImage(0,0,GLayer->Top()->pixmap(Qt::ReturnByValue).toImage());
         painter.drawImage(0,0,DrawTool.getDrawLabel()->pixmap(Qt::ReturnByValue).toImage());
 
@@ -732,19 +763,33 @@ void Painter::mouseMoveEvent(QMouseEvent *event){
     getMouse(event);//取得滑鼠座標
 
     //超出範圍
-    if(mouse_now.x()<GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()*zoomRatio||
-            mouse_now.y()<GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()*zoomRatio){
+    if(mouse_now.x()<GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio||
+            mouse_now.y()<GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio){
 
-        if(Ptool!=DrawShape&&Ptool!=DrawPen){
+        if(Ptool==DrawShape){
+            mouse_now=QPoint(
+                std::max(mouse_now.x(),GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio),
+                std::max(mouse_now.y(),GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio)
+            );
+        }
+        else if(Ptool==DrawPen){}
+        else{
             mouse_pre=QPointF(-1,-1);
             return;
         }
     }
     //超出範圍
-    if(mouse_now.x()>=GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()*zoomRatio||
-            mouse_now.y()>=GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()*zoomRatio){
+    if(mouse_now.x()>=GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio||
+            mouse_now.y()>=GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio){
 
-        if(Ptool!=DrawShape&&Ptool!=DrawPen){
+        if(Ptool==DrawShape){
+            mouse_now=QPoint(
+                std::min(mouse_now.x(),GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio),
+                std::min(mouse_now.y(),GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio)
+            );
+        }
+        else if(Ptool==DrawPen){}
+        else{
             mouse_pre=QPointF(-1,-1);
             return;
         }
@@ -753,7 +798,7 @@ void Painter::mouseMoveEvent(QMouseEvent *event){
     if(Ptool==DrawPen){//繪圖工具使用
         MousePositionOffset();
 
-        PainterValueController->loadTool((Ptool==DrawPen)?ValueController::PenValue:ValueController::EraserValue);//讀取畫筆資料
+        PainterValueController->loadTool(ValueController::PenValue);//讀取畫筆資料
 
         DrawTool.Draw(mouse_now.toPoint(),PainterValueController->getPen());
     }
@@ -776,7 +821,6 @@ void Painter::mouseMoveEvent(QMouseEvent *event){
 
         GLayer->CanvasUpdate(GLayer->Top());
         GLayer->GraphLayerScene()->setSceneRect(QRect(0,0,GLayer->CanvasSize().width(),GLayer->CanvasSize().height()));
-
     }
 
     if(Ptool==DrawShape){//圖形工具使用
@@ -811,7 +855,7 @@ void Painter::mouseMoveEvent(QMouseEvent *event){
         updatingImage(newImg);
     }
 
-    mouse_pre=mouse_now;
+    mouse_pre=mouse_now;//更新上一個位置
 
 }
 
@@ -822,15 +866,15 @@ void Painter::wheelEvent(QWheelEvent *event)
     else{
         if(SceneHovered==false)return;
         double ratio=1.15478198;
-        if(event->delta()>0&&zoomRatio>0.11){//小數比較所以設下限為0.11避免誤差，實際值為0.1
+        if(event->delta()>0&&zoomRatio<9.0){//小數比較所以設下限為9.0避免誤差，實際值為10.0
             ui->graphicsView->scale(ratio,ratio);
-            zoomRatio/=ratio;
-        }
-        else if(event->delta()<0&&zoomRatio<9.0){//小數比較所以設下限為9.0避免誤差，實際值為10.0
-            ui->graphicsView->scale(1.0/ratio,1.0/ratio);
             zoomRatio*=ratio;
         }
-        ui->ZoomRatioDisplayer->setText(QString::number(std::round((1/zoomRatio)*10000)/100)+QString("%"));
+        else if(event->delta()<0&&zoomRatio>0.11){//小數比較所以設下限為0.11避免誤差，實際值為0.1
+            ui->graphicsView->scale(1.0/ratio,1.0/ratio);
+            zoomRatio/=ratio;
+        }
+        ui->ZoomRatioDisplayer->setText(QString::number(std::round((zoomRatio/1)*10000)/100)+QString("%"));
         if(GLayer->Top()==NULL)return;
     }
 }
@@ -1041,7 +1085,7 @@ void Painter::getMouse(QMouseEvent *event){
     GraphViewPosFromGlobal.setY(GraphViewPosFromGlobal.y()+25);
    //----畫布原點坐標計算----//
 
-    mouse_now=(mouse_now-GraphViewPosFromGlobal)*zoomRatio;//將原先儲存的座標轉換成在scrollArea上的座標
+    mouse_now=(mouse_now-GraphViewPosFromGlobal)/zoomRatio;//將原先儲存的座標轉換成在scrollArea上的座標
 }
 
 //滑鼠座標偏移
@@ -1051,9 +1095,9 @@ void Painter::MousePositionOffset(){
 
     //----座標偏移----//   
     if(Ptool!=DrawShape)mouse_now-=DrawPos;
-    mouse_now+=(scrollBarOffset*zoomRatio);
+    mouse_now+=(scrollBarOffset/zoomRatio);
 
-    mouse_now.setX(std::floor(mouse_now.x())-(Ptool==DrawShape?0:1));
+    mouse_now.setX(std::floor(mouse_now.x()));
     mouse_now.setY(std::floor(mouse_now.y()));
     //----座標偏移----//
 }
@@ -1070,9 +1114,7 @@ QImage Painter::BucketDrawImage(){
 
 //使用水桶作畫
 void Painter::BucketDraw(QImage* img){
-    PainterValueController->loadTool(ValueController::BucketValue);
-    BucketPainter bucket(img,PainterValueController->getColor(ValueController::BucketValue));
-    bucket.ColorDiffuse(mouse_now.toPoint());
+
 }
 
 //更新圖片
@@ -1219,6 +1261,7 @@ void Painter::mergeGraphLayer()
     //----合併----//
     QImage newImg(range.x()-minPos.x(),range.y()-minPos.y(),QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&newImg);
+    painter.setRenderHint(QPainter::Antialiasing, true);
     while(!itemProcess.empty()){
         GraphLayerObject *Gobj=itemProcess.front()->getIdx();
         painter.drawImage(Gobj->pos()-minPos,Gobj->pixmap(Qt::ReturnByValue).toImage());

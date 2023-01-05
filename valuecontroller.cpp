@@ -12,6 +12,7 @@ ValueController::ValueController(QStackedWidget *RegionWidget)
     blurryWeight=1;//模糊權重強度
     penTransParentValue=255;//畫筆透明值
     bucketTransParentValue=255;//水桶透明值
+    bucketColorToleranceValue=30;//水桶容差
     shapeTransParentValue=255;//圖形工具透明度
     shapeWidth=10;//圖形工具邊寬
 
@@ -69,6 +70,11 @@ int ValueController::getBlurryWeight()
 int ValueController::getShapeWidth()
 {
     return shapeWidth;
+}
+
+int ValueController::getBucketColorToleranceValue()
+{
+    return bucketColorToleranceValue;
 }
 
 //設定使用顏色
@@ -171,6 +177,13 @@ void ValueController::ControllerInit()
     blurryWeightControl->setMaximum(10);
     blurryWeightControl->setValue(1);   
 
+    bucketColorToleranceControl=new QSlider(Qt::Horizontal);
+    bucketColorToleranceControl->setMinimumSize(200,10);
+    bucketColorToleranceControl->setMaximumSize(200,10);
+    bucketColorToleranceControl->setMinimum(0);
+    bucketColorToleranceControl->setMaximum(255);
+    bucketColorToleranceControl->setValue(30);
+
 }
 
 //每個工具的控制頁面UI設定
@@ -222,6 +235,8 @@ void ValueController::ControllerGroupBoxInit()
 
     BucketBox=new QGroupBox();
     BucketBox->setLayout(BucketBoxLayout);
+    BucketBoxLayout->addWidget(BucketColorToleranceName);
+    BucketBoxLayout->addWidget(bucketColorToleranceControl);
     BucketBoxLayout->addWidget(BucketTransParentName);
     BucketBoxLayout->addWidget(bucketTransParentControl);
     //----水桶設定區初始化----//
@@ -291,8 +306,8 @@ void ValueController::UISetting()
         "background-color:rgb(225,225,225);color:rgb(35,35,35);"
         "border-radius: 4px;border-color:rgb(65,65,65);border-width:2px;border-style:solid;"
     );
-    PenSizeName2->setMinimumSize(170,30);
-    PenSizeName2->setMaximumSize(170,30);
+    PenSizeName2->setMinimumSize(173,30);
+    PenSizeName2->setMaximumSize(173,30);
     //----畫筆控制項UI設定----//
 
 
@@ -340,8 +355,18 @@ void ValueController::UISetting()
         "background-color:rgb(225,225,225);color:rgb(35,35,35);"
         "border-radius: 4px;border-color:rgb(65,65,65);border-width:2px;border-style:solid;"
     );
-    BucketTransParentName->setMinimumSize(170,30);
-    BucketTransParentName->setMaximumSize(170,30);
+    BucketTransParentName->setMinimumSize(173,30);
+    BucketTransParentName->setMaximumSize(173,30);
+
+    BucketColorToleranceName=new QLabel("容差：30");
+    BucketColorToleranceName->setFont(QFont("標楷",10,  QFont::Bold));
+    BucketColorToleranceName->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    BucketColorToleranceName->setStyleSheet(
+        "background-color:rgb(225,225,225);color:rgb(35,35,35);"
+        "border-radius: 4px;border-color:rgb(65,65,65);border-width:2px;border-style:solid;"
+    );
+    BucketColorToleranceName->setMinimumSize(95,30);
+    BucketColorToleranceName->setMaximumSize(95,30);
     //----水桶控制項UI設定----//
 
 
@@ -527,8 +552,8 @@ void ValueController::UISetting()
         "background-color:rgb(225,225,225);color:rgb(35,35,35);"
         "border-radius: 4px;border-color:rgb(65,65,65);border-width:2px;border-style:solid;"
     );
-    ShapeTransParentName->setMinimumSize(170,30);
-    ShapeTransParentName->setMaximumSize(170,30);
+    ShapeTransParentName->setMinimumSize(173,30);
+    ShapeTransParentName->setMaximumSize(173,30);
     //----圖形工具控制項UI設定----//
 
 
@@ -541,7 +566,8 @@ void ValueController::UISetting()
         &blurryWeightControl,//模糊深度控制項
         &shapeWidthControl,//矩形邊寬控制項
         &shapeTransParentControl,//矩形透明度控制項
-        &bucketTransParentControl//水桶透明度控制項
+        &bucketTransParentControl,//水桶透明度控制項
+        &bucketColorToleranceControl//水桶透明度控制項
     };
     for(auto &obj:sliders){
         (*obj)->setStyleSheet(
@@ -604,6 +630,7 @@ void ValueController::SliderConnectInit()
     connect(blurryWeightControl,SIGNAL(valueChanged(int)),this,SLOT(valueSet(int)));
     connect(penTransParentControl,SIGNAL(valueChanged(int)),this,SLOT(valueSet(int)));
     connect(bucketTransParentControl,SIGNAL(valueChanged(int)),this,SLOT(valueSet(int)));
+    connect(bucketColorToleranceControl,SIGNAL(valueChanged(int)),this,SLOT(valueSet(int)));
     connect(shapeTransParentControl,SIGNAL(valueChanged(int)),this,SLOT(valueSet(int)));
     connect(shapeWidthControl,SIGNAL(valueChanged(int)),this,SLOT(valueSet(int)));
 }
@@ -636,6 +663,10 @@ void ValueController::valueSet(int value)
     if(slider==bucketTransParentControl){
         bucketTransParentValue=value;
         BucketTransParentName->setText("不透明度："+QString::number((float)value/255*100,'f',2)+" %");
+    }
+    if(slider==bucketColorToleranceControl){
+        bucketColorToleranceValue=value;
+        BucketColorToleranceName->setText("容差："+QString::number(value));
     }
     if(slider==shapeWidthControl){
         shapeWidth=value;

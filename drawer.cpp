@@ -14,7 +14,7 @@ void Drawer::Draw(QPoint pos,QPen pen)
     DrawImg.fill(Qt::transparent);
 
     QPainter painter(&DrawImg);
-
+    painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
 
     painter.setPen(pen);
@@ -24,8 +24,11 @@ void Drawer::Draw(QPoint pos,QPen pen)
     painter.drawImage(0,0,DrawLabel->pixmap(Qt::ReturnByValue).toImage());
     painter.drawPath(*DrawPath);
 
-    DrawLabel->setPixmap(QPixmap::fromImage(DrawImg));
+    //清空繪圖路徑避免執行效能出現問題
+    DrawPath->clear();
+    DrawPath->moveTo(pos);
 
+    DrawLabel->setPixmap(QPixmap::fromImage(DrawImg));
 }
 
 //畫筆工具開始使用初始化
@@ -43,8 +46,8 @@ void Drawer::DrawInit(QPoint MousePos, QPoint LabelPos,QSize LabelSize,QPen pen)
     DrawImg.fill(Qt::transparent);
 
     QPainter painter(&DrawImg);
-
-    painter.setCompositionMode(QPainter::CompositionMode_Source);   
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
 
     painter.setPen(pen);
 

@@ -30,6 +30,7 @@ public:
     QColor getColor(ToolCode code);//回傳目前使用顏色
     int getBlurryWeight();//回傳模糊權重
     int getShapeWidth();
+    int getBucketColorToleranceValue();
     void setColor(QColor rgba);
     void loadTool(ToolCode code);//讀取使用工具資料
     void setPage(PageCode code);//設定工具頁面
@@ -97,9 +98,13 @@ private:
 
     //----水桶數值設定----//
     QGroupBox *BucketBox;//水桶數值設定區
+    QLabel *BucketColorToleranceName;//水桶容差顯示物件
+    QSlider *bucketColorToleranceControl;//水桶容差控制項
     QLabel *BucketTransParentName;//水桶顏色透明度顯示物件
     QSlider *bucketTransParentControl;//水桶透明度控制項
-    int bucketTransParentValue;//目前透明度
+
+    int bucketTransParentValue;//目前水桶透明度
+    int bucketColorToleranceValue;//目前水桶容差
 
     void ControllerInit();//數值設定器初始化
     void ControllerGroupBoxInit();//數值設定容器初始化

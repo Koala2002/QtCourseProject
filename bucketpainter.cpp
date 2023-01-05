@@ -1,10 +1,15 @@
 #include "bucketpainter.h"
 
-BucketPainter::BucketPainter(QImage *image,QColor c,QObject *parent)
-    : QObject{parent}
+BucketPainter::BucketPainter()
 {
-    img=image;
-    bucketColor=c;
+
+}
+
+void BucketPainter::BucketInit(QImage &Image, QColor color, int tValue)
+{
+    img=&Image;
+    bucketColor=color;
+    colorToleranceValue=tValue;
 }
 
 //顏色擴散
@@ -30,7 +35,7 @@ void BucketPainter::ColorDiffuse(QPoint p)
             }
         }
         bfs.pop();
-    }
+    }    
 }
 
 //取得流動座標
@@ -48,9 +53,19 @@ bool BucketPainter::CanFlow(QPoint p)
     if(p.x()>=img->width()||p.y()>=img->height())return false;
     else if(p.x()<0||p.y()<0)return false;
     else if(Colored[p.y()][p.x()]==true)return false;
-    else if(img->pixelColor(p)==bucketColor)return false;
-    else if(img->pixelColor(p)!=coverColor)return false;
-    else return true;
+    else {
+        QColor imgColor=img->pixelColor(p);
+        if(
+            ((coverColor.red()+colorToleranceValue)>=imgColor.red()&&imgColor.red()>=(coverColor.red()-colorToleranceValue))&&
+            ((coverColor.green()+colorToleranceValue)>=imgColor.green()&&imgColor.green()>=(coverColor.green()-colorToleranceValue))&&
+            ((coverColor.blue()+colorToleranceValue)>=imgColor.blue()&&imgColor.blue()>=(coverColor.blue()-colorToleranceValue))
+
+        )return true;
+
+
+        return false;
+    }
+
 }
 
 //確認是否能使用座標p進行運算(用於模糊工具)
