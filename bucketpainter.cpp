@@ -58,8 +58,8 @@ bool BucketPainter::CanFlow(QPoint p)
         if(
             ((coverColor.red()+colorToleranceValue)>=imgColor.red()&&imgColor.red()>=(coverColor.red()-colorToleranceValue))&&
             ((coverColor.green()+colorToleranceValue)>=imgColor.green()&&imgColor.green()>=(coverColor.green()-colorToleranceValue))&&
-            ((coverColor.blue()+colorToleranceValue)>=imgColor.blue()&&imgColor.blue()>=(coverColor.blue()-colorToleranceValue))
-
+            ((coverColor.blue()+colorToleranceValue)>=imgColor.blue()&&imgColor.blue()>=(coverColor.blue()-colorToleranceValue))&&
+            ((coverColor.alpha()+colorToleranceValue)>=imgColor.alpha()&&imgColor.alpha()>=(coverColor.alpha()-colorToleranceValue))
         )return true;
 
 

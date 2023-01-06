@@ -687,20 +687,15 @@ void Painter::mouseReleaseEvent(QMouseEvent *event){
                 std::max(mouse_now.x(),GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio),
                 std::max(mouse_now.y(),GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio)
             );
-            qDebug()<<"bb";
         }
         //超出圖層範圍則更改mouse_now的數值
         if(mouse_now.x()>=GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio||
                 mouse_now.y()>=GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio){
 
-            qDebug()<<mouse_now;
-            qDebug()<<QPoint(GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio,
-                             GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio);
             mouse_now=QPoint(
                 std::min(mouse_now.x(),GLayer->Top()->width()+GLayer->Top()->x()-ui->graphicsView->horizontalScrollBar()->value()/zoomRatio),
                 std::min(mouse_now.y(),GLayer->Top()->height()+GLayer->Top()->y()-ui->graphicsView->verticalScrollBar()->value()/zoomRatio)
             );
-            qDebug()<<"aa";
         }
 
         MousePositionOffset();
@@ -1018,7 +1013,6 @@ void Painter::OpenFile()
 
     if(filepath.isEmpty())return;//如果檔案路徑是空的
 
-    qDebug()<<"aaa";
     QImage image(filepath);
 
     image=image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
